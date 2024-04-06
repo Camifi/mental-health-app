@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf.urls.static import static
 from core import views
-from mentalhealth_app import settings
+from mental_health_app import settings
 
 urlpatterns = [
     
