@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Información Profesional</title>
+  </head>
+  <body>
+    <h2>Configura Tu Perfil Profesional</h2>
+    <h3>
+      Proporciona detalles para que los pacientes te conozcan mejor y puedan
+      elegirte con confianza
+    </h3>
+    <p>
+      La información detallada permite a los pacientes encontrar el especialista
+      adecuado y asegura la mejor correspondencia
+    </p>
+
+     <!-- Asegúrate de incluir enctype="multipart/form-data" para la carga de archivos -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar</button>
+    </form>
+    </form>
+  </body>
+</html>

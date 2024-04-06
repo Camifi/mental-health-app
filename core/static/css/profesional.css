@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+::selection{
+  background: #8e44ad;
+  color: #fff;
+}
+html,body{
+  display: grid;
+  height: 100%;
+  place-items: center;
+
+}
+.container{
+  max-width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+.container .box {
+  width: calc(33% - 20px); /* Ajusta según el número de tarjetas que quieras en una fila y el espacio entre ellas */
+  margin: 10px; /* Asegúrate de ajustar el margen para que el cálculo del ancho arriba tenga en cuenta este espacio */
+  background: #fff;
+   box-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+  display: flex;
+  flex-direction: column;
+  justify-content: start; /* Alinea el contenido al principio */
+  align-items: center;
+  padding: 20px 30px;
+  border-radius: 5px;
+  margin-top: 20px;
+  height: 380px; /* Asegúrate de que se expanda según el contenido, pero se manejará la altura igual a través del contenedor */
+}
+.box .quote i{
+margin-top: 10px;
+font-size: 45px;
+color: #17c0eb
+}
+.container .box .image{
+  margin: 10px 0;
+  height: 150px;
+  width: 150px;
+  background: #717BBC;
+  padding: 3px;
+  border-radius: 50%;
+}
+.box .image img{
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+.box p{
+  text-align: center;
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.box .name_job{
+  margin: 10px 0 3px 0;
+  color: #717BBC;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.rating i{
+  font-size: 18px;
+  color: #8e44ad;
+  margin-bottom: 5px;
+}
+.btns{
+  margin-top: auto;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.btns a.btn{
+  background: #717BBC;
+  text-decoration: none;
+  text-align: center;
+  width: 100%;
+  padding: 9px 0px;
+  outline: none;
+  border: 2px solid #717BBC;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 400;
+  color: #717BBC;
+  transition: all 0.3s linear;
+}
+.btns a.btn:first-child{
+  background: none;
+  margin-top: auto;
+  margin-right: 5px;
+}
+.btns a.btn:last-child{
+  color: #fff;
+  margin-left: 5px;
+}
+.btns a.btn:first-child:hover{
+  background: #717BBC;
+  color: #fff;
+}
+.btns a.btn:hover{
+  color: #fff;
+}
+@media (max-width:1045px){
+  .container .box{
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+  }
+}
+@media (max-width:710px){
+  .container .box{
+    width: 100%;
+  }
+}

@@ -1,0 +1,167 @@
+{% extends 'patient/base.html' %} 
+
+{% block content %}
+<style>
+  .messages-box {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .messages-list {
+    padding-left: 0;
+  }
+
+  .message {
+    margin-bottom: 15px;
+    list-style: none;
+  }
+
+  .message-text {
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+  }
+
+  .received {
+    background-color: #f1f0f0;
+    align-self: flex-start;
+  }
+
+  .message-form {
+    display: flex;
+    
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
+
+  .message-input {
+    flex: 1;
+    border-radius: 0;
+    border-right: none;
+  }
+
+  .btn-send {
+    border-radius: 0;
+  }
+
+  .chat-container {
+    height: 100%;
+    display: flex;
+    
+    flex-direction: column;
+  }
+</style>
+
+<div class="chat-container">
+  <div class="card flex-grow-1">
+    <div class="card-header bg-primary text-white">
+      <b>Bienvenid@, {{ user.username }}</b>
+    
+      <a
+        href="{% url 'core:clear_chat' user_id=user.id %}"
+        id="clear-messages"
+        class="btn btn-warning"
+        style="display: inline-block; margin-left: auto"
+      >
+        Limpiar Conversacion
+      </a>
+    </div>
+    <div class="card-body messages-box">
+      <ul
+        class="list-unstyled messages-list"
+        style="height: 60vh; overflow-y: auto"
+      >
+        {% for message in chats %}
+        <li>
+          <div class="message-text">
+            <div class="message-sender">
+              <b>{{ message.is_from_user|yesno:"You,AI Chatbot" }}</b>
+            </div>
+            <div class="message-content">{{message.content}}</div>
+          </div>
+        </li>
+        {% endfor %}
+
+        <!-- Aquí se añadirán los mensajes dinámicamente -->
+      </ul>
+    </div>
+  </div>
+  <form class="message-form">
+    {% csrf_token %}
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control message-input"
+        placeholder="Type your message..."
+      />
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary btn-send">Send</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  const messagesList = document.querySelector(".messages-list");
+  const messageForm = document.querySelector(".message-form");
+  const messageInput = document.querySelector(".message-input");
+  const clearMessagesButton = document.getElementById("clear-messages");
+
+  // Manejador del evento de envío del formulario.
+  messageForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const message = messageInput.value.trim();
+    if (message.length === 0) {
+      return;
+    }
+
+    // Lógica para enviar el mensaje al servidor y recibir la respuesta.
+    fetch("", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        csrfmiddlewaretoken: document.querySelector(
+          "[name=csrfmiddlewaretoken]"
+        ).value,
+        message: message,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        addMessageToList("You", message, true);
+        addMessageToList("AI Chatbot", data.response, false);
+        messageInput.value = ""; // Limpiar el input después de enviar.
+      });
+  });
+
+  // Función para añadir mensajes a la lista.
+  function addMessageToList(sender, content, isSent) {
+    const messageItem = document.createElement("li");
+    messageItem.classList.add("message", isSent ? "sent" : "received");
+    messageItem.innerHTML = `
+      <div class="message-text">
+        <div class="message-sender"><b>${sender}</b></div>
+        <div class="message-content">${content}</div>
+      </div>`;
+    messagesList.appendChild(messageItem);
+    scrollToBottom();
+  }
+
+  function scrollToBottom() {
+    messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  // Manejador para el botón de limpiar mensajes.
+  clearMessagesButton.addEventListener("click", () => {
+    messagesList.innerHTML = ""; // Limpia la lista de mensajes.
+  });
+</script>
+{% endblock %}

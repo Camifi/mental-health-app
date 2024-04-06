@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-lg-6">
+      <h1 class="display-4">Conecta, Comunica, Cuida</h1>
+
+      <p class="lead">
+        A través de nuestra aplicación, facilitamos una comunicación efectiva y
+        eficiente antes de las consultas presenciales, utilizando un chatbot
+        inteligente como puente entre pacientes y doctores.
+      </p>
+      <a href="#" class="btn btn-primary btn-lg">Descubre Cómo Funciona</a>
+    </div>
+    <div class="col-lg-6">
+      <!-- Static image -->
+      <img
+        src="{% static 'images/foto1.png' %}"
+        alt="Decorative Image"
+        class="img-fluid"
+      />
+    </div>
+  </div>
+</div>
+
+{% endblock %}

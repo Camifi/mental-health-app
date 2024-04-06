@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bienvenido</title>
+    <!-- Bootstrap CSS CDN Link -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3pQir5c65d0I4y4Cl2Z2tewmCqRfDChmcEi/6k5mI5lbg6WkbHr5yG7fkr"
+      crossorigin="anonymous"
+    />
+    <!-- Asegúrate de incluir tus propios estilos después de Bootstrap para poder sobrescribirlos si es necesario -->
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="onboarding text-center">
+        <h1>Bienvenido!</h1>
+        <p class="lead">Ahora estás registrado y listo para comenzar.</p>
+        <p>
+          Antes de continuar, podrías indicarnos la finalidad de tu uso para con
+          la app
+        </p>
+
+        <form method="post" action="{% url 'select_user_type' %}">
+          {% csrf_token %}
+          <button
+            type="submit"
+            name="user_type"
+            value="P"
+            class="btn btn-primary btn-lg m-2"
+          >
+            Busco ayuda
+          </button>
+          <button
+            type="submit"
+            name="user_type"
+            value="PR"
+            class="btn btn-info btn-lg m-2"
+          >
+            Soy profesional
+          </button>
+        </form>
+
+        <!-- Incluye navegación adicional si es necesario -->
+      </div>
+    </div>
+    <!-- Bootstrap JS, Popper.js, and jQuery CDN links -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+      integrity="sha384-eMNCOe7tC1doJGI3F3uJW3jPY/3W9SHS6btyaesGjsVAiepXpG8JF5FJv2tyQ2NS"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+G+lMu4lL8tSGLMV8xgTvfj0J8U31qyHZT8"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

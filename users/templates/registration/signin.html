@@ -1,0 +1,74 @@
+{% load static %}
+{% block head %}
+
+<link href="{% static 'css/test.css' %}" rel="stylesheet" />
+<script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+
+{% endblock %}
+{% block content %}
+
+<div class="container">
+  <div class="forms-container">
+    <div class="signin-signup">
+      <!-- Formulario de Inicio de Sesión -->
+      <form action="/signin/" method="POST" class="sign-in-form">
+        <h2 class="title">Iniciar sesión</h2>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+  <div class="error-messages">
+    {% for error in form.non_field_errors %}
+      <p class="error">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+
+        <!-- Campo de Usuario -->
+        <div class="input-field">
+          <i class="fas fa-user"></i>
+          <input
+            type="text"
+            name="{{ form.username.name }}"
+            placeholder="{{ form.username.label }}"
+            id="id_{{ form.username.name }}"
+            class="{% if form.username.errors %}invalid{% endif %}"
+          />
+          <!-- Mostrar errores para 'username' -->
+          {% for error in form.username.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <!-- Campo de Contraseña -->
+        <div class="input-field">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            name="{{ form.password.name }}"
+            placeholder="Contraseña"
+            id="id_{{ form.password.name }}"
+            class="{% if form.password.errors %}invalid{% endif %}"
+          />
+          <!-- Mostrar errores para 'password' -->
+          {% for error in form.password.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <input type="submit" value="Login" class="btn solid" />
+        <div class="signup-link">
+          No tienes una cuenta? <a href="{% url 'signup' %}">Registrarse</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</form>
+
+<div class="panels-container">
+  <div class="panel left-panel">
+    <img src="{% static 'images/test1.svg' %}" class="image" alt="" />
+  </div>
+</div>
+</div>
+
+{% endblock %}

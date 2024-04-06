@@ -1,0 +1,51 @@
+  <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:patient_home' %}">
+          <i class="icon-grid menu-icon"></i>
+          <span class="menu-title">Inicio</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:chatbot' %}">
+          <i class="icon-columns menu-icon"></i>
+          <span class="menu-title">Chatbot</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:list_professionals' %}">
+          <i class="icon-columns menu-icon"></i>
+          <span class="menu-title">Pacientes
+          </span>
+        </a>
+      </li>
+<li class="nav-item">
+        <a class="nav-link" href="{% url 'core:list_professionals' %}">
+          <i class="icon-columns menu-icon"></i>
+          <span class="menu-title">Resumen de sesiones
+          </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="collapse"
+          href="#charts"
+          aria-expanded="false"
+          aria-controls="charts"
+        >
+          <i class="icon-bar-graph menu-icon"></i>
+          <span class="menu-title">Perfil</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'core:chatbot' %}">Ajustes</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+     
+  </nav>

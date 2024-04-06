@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Confirmar Eliminación de Cuenta</h2>
+<p>
+  Eliminar tu cuenta es irreversible y cerrará tu sesión inmediatamente. ¿Estás
+  seguro de que deseas continuar?
+</p>
+
+<form action="" method="post">
+  {% csrf_token %}
+  <input type="submit" value="Eliminar mi cuenta permanentemente" />
+</form>
+{% endblock %}

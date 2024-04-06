@@ -1,0 +1,108 @@
+{% load static %} {% block head %}
+
+<link href="{% static 'css/test.css' %}" rel="stylesheet" />
+<script
+  src="https://kit.fontawesome.com/64d58efce2.js"
+  crossorigin="anonymous"
+></script>
+
+{% endblock %} {% block content %}
+
+<div class="container">
+  <div class="forms-container">
+    <div class="signin-signup">
+      <!-- Formulario de Registro -->
+      <form action="{% url 'signup' %}" method="POST" class="sign-up-form">
+        <h2 class="title">Crear cuenta</h2>
+        {% csrf_token %}
+
+        <!-- Campo de Nombre Completo -->
+        <div class="input-field">
+          <i class="fas fa-user"></i>
+          <input
+            type="text"
+            name="{{ form.full_name.name }}"
+            placeholder="{{ form.full_name.label }}"
+            id="id_{{ form.full_name.name }}"
+            required
+          />
+        </div>
+
+        <!-- Campo de Número de Teléfono -->
+        <div class="input-field">
+          <i class="fas fa-phone"></i>
+          <input
+            type="text"
+            name="{{ form.phone_number.name }}"
+            placeholder="{{ form.phone_number.label }}"
+            id="id_{{ form.phone_number.name }}"
+            required
+          />
+        </div>
+
+        <!-- Campo de Correo Electrónico -->
+        <div class="input-field">
+          <i class="fas fa-envelope"></i>
+          <input
+            type="email"
+            name="{{ form.email.name }}"
+            placeholder="{{ form.email.label }}"
+            id="id_{{ form.email.name }}"
+            required
+          />
+        </div>
+
+        <!-- Campo de Nombre de Usuario -->
+        <div class="input-field">
+          <i class="fas fa-user"></i>
+          <input
+            type="text"
+            name="{{ form.username.name }}"
+            placeholder="{{ form.username.label }}"
+            id="id_{{ form.username.name }}"
+            required
+          />
+        </div>
+
+        <!-- Campo de Contraseña -->
+        <div class="input-field">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            name="password1"
+            placeholder="Contraseña"
+            id="id_password1"
+            required
+          />
+        </div>
+
+        <!-- Campo de Confirmar Contraseña -->
+        <div class="input-field">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            name="password2"
+            placeholder="Confirmar Contraseña"
+            id="id_password2"
+            required
+          />
+        </div>
+
+        <input type="submit" value="Registrar" class="btn solid" />
+
+        <!-- Enlace para iniciar sesión si ya tiene cuenta -->
+        <div class="signup-link">
+          ¿Ya tienes una cuenta? <a href="{% url 'signin' %}">Iniciar sesión</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="panels-container">
+    <div class="panel left-panel">
+      <img src="{% static 'images/sign_up_image.svg' %}" class="image" alt="" />
+    </div>
+  </div>
+</div>
+
+{% endblock %}
