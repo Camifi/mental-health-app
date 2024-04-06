@@ -101,11 +101,10 @@ color: #17c0eb
   background: none;
   margin-top: auto;
   margin-right: 5px;
+  color: #717BBC;
+
 }
-.btns a.btn:last-child{
-  color: #fff;
-  margin-left: 5px;
-}
+
 .btns a.btn:first-child:hover{
   background: #717BBC;
   color: #fff;
