@@ -9,14 +9,9 @@
   background: #8e44ad;
   color: #fff;
 }
-html,body{
-  display: grid;
-  height: 100%;
-  place-items: center;
 
-}
 .container{
-  max-width: 1100px;
+ width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,4 +117,310 @@ color: #17c0eb
   .container .box{
     width: 100%;
   }
+}
+/* 
+profesional details */
+
+
+  .container-detail {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    min-height: 100vh;
+    width: 100%;
+    flex-wrap: nowrap; /* Evitar que los elementos se coloquen en líneas nuevas */
+    position: relative;
+}
+
+.profile-card {
+    background: #717BBC;
+    width: 400px; /* O puedes usar flex-basis si estás usando flexbox para controlar el tamaño */
+    padding: 2rem;
+     box-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+    border-radius: 10px;
+    min-height: 620px;
+    position: relative;
+    color: #fff;
+    margin: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 0 1 auto; 
+}
+
+.profile-card .profile-pic{
+
+    overflow: hidden;
+}
+.profile-card .profile-pic img{
+    border-radius: 10px;
+}
+.profile-card .profile-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width:100%;
+}
+.profile-details .intro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.profile-details .intro h2{
+  font-size: 22px;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+.profile-details .intro h4{
+    font-size: 14;
+    font-weight: 400;
+    border-radius: 4px;
+    padding: 5px 10px;
+   
+    text-align: center;
+}
+.profile-details .intro .social{
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+.profile-details .intro .social i{
+    color:#ddd;
+    font-size: 16px;
+    background-color:#ddd;
+    margin: 5px;
+    height: 35px;
+    width:35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 5px;
+    transition: 0.5s;
+}
+.profile-details .intro .social i:hover{
+    transform: scale(1.2);
+    border:1px solid rgba(255,255,255,0.3);
+}
+.profile-details .contact-info{
+    background-color: rgba(113, 123, 188, 0.35);
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+}
+.profile-details .contact-info .row{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+.contact-info .row .icon{
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+    margin-right: 10px;
+    border-radius: 5px;
+    background-color: transparent;
+    text-align: center;
+    color:#fff;
+    transition: 0.5s;
+}
+.row .icon:hover{
+    transform:scale(1.2);
+    border:1px solid rgba(255,255,255,0.1);
+}
+.row .content{
+    min-width: 70%;
+}
+.row .content span{
+    font-size: 12px;
+}
+.row .content h5{
+    font-size: 12px;
+}
+.connect-btn{
+  background: transparent;
+  text-decoration: none;
+  text-align: center;
+  width: 100%;
+  padding: 9px 0px;
+  outline: none;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  transition: all 0.3s linear;
+  margin-top: 20px;
+}
+/*****about section ****/
+.about {
+    flex: 0 0 70%; /* Asigna un 70% del espacio disponible sin crecer o encoger */
+    background-color: #F2F2F2;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    margin: 15px;
+    color: #fff;
+    z-index: 1;
+    /* Elimina el max-width o ajústalo al ancho deseado que no supere el 70% del ancho del contenedor padre */
+    max-width: none;
+    
+}
+.about h1{
+    color:#2F2E41;
+    
+    position: relative;
+    display: inline-block;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.about h2{
+    color:#2F2E41;
+   font-size: 45px!important;
+    font-weight: bold;
+    letter-spacing: 0;
+}
+.about p{
+    color:#2F2E41;
+    margin:1.5rem 0;
+    margin-right: 15%;
+}
+.about .work{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+}
+.work .workbox{
+    display: flex;
+    min-height: 150px;
+    justify-content: space-around;
+    border-radius:8px;
+    border:1px solid #2F2E41;
+    padding: 1rem;
+    margin:1rem;
+
+}
+.work .workbox .desc{
+    width:75%;
+    color:#555;
+}
+.work .workbox .desc h3{
+  font-size: 17px;
+  line-height: 25px;
+    color:#2F2E41;
+    margin-bottom: 3px;
+}
+.work .workbox .desc p{
+font-size: 14px;
+    margin:0px;
+}
+/***Responsive Design ***/
+@media(max-width:768px)
+{
+    .about .decorative-circle {
+    display: none;
+}
+  .work .workbox {
+    display: flex;
+    min-height: 150px;
+    justify-content: space-around;
+    border-radius: 8px;
+    border: 1px solid #2F2E41;
+    padding: 1rem;
+    margin: 1rem;
+    flex-direction: column;
+}
+    .about{
+        width: 1005;
+        max-width: 400px;
+        padding:1rem;
+        margin:1rem;
+
+    }
+    .about h1{
+        font-size: 2.2rem;
+    }
+    .about .work{
+        grid-template-columns: repeat(1,1fr);
+        grid-template-rows: repeat(4,auto);
+    }
+}
+.profile-card .profile-pic img {
+    margin-top: 15px;
+    overflow: hidden;
+    margin: 10px 0;
+    height: 150px;
+    width: 150px;
+    background: #717BBC;
+    padding: 3px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+
+/*** Responsive Design ***/
+@media(max-width: 768px) {
+    .container-detail {
+        flex-wrap: wrap; /* Permite que los elementos se apilen verticalmente */
+    }
+
+    .profile-card, .about {
+        flex: 0 0 100%; 
+        max-width: 100%; 
+        margin: 15px 010px; 
+    }
+
+    .profile-card {
+        width: auto; 
+        padding: 1.5rem; 
+        min-height: auto; 
+    }
+
+    .profile-card .profile-pic img {
+        height: 100px;
+        width: 100px;
+    }
+
+    .about .work {
+        grid-template-columns: 1fr; 
+    }
+
+   
+    .about h1 {
+        font-size: 2rem; 
+    }
+    
+    .work .workbox .desc {
+        width: auto; 
+    }
+  }
+
+  .about .decorative-circle {
+     position: absolute;
+    top: 0;
+    right: 0;
+    width: 140px; 
+    height: auto;
+    top: 15px; 
+    right: 15px; 
+}
+
+.workbox .icons{
+  width: 30px;
+}
+
+
+.back-button {
+    position: absolute;
+    top: 20px; /* Ajusta la distancia desde la parte superior del contenedor */
+    left: 30px; /* Ajusta la distancia desde el lado izquierdo del contenedor */
+    z-index: 5; /* Asegúrate de que la flecha esté por encima de otros elementos */
+    color: #fff; /* Cambia a tu color preferido */
+    font-size: 22px; /* Cambia al tamaño que desees */
+    text-decoration: none; /* Elimina cualquier subrayado del enlace */
 }

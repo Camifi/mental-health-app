@@ -1,4 +1,6 @@
-{% load static %}
+{% extends 'patient/base.html' %} 
+{% load static %} {% block content %}
+
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -10,6 +12,7 @@
   
 </head>
 <body>
+  
   <div class="container">
     {% for professional in professionals %}
     <div class="box">
@@ -35,6 +38,6 @@
     {% endfor %}
   </div>
 
-
+   {% endblock %}
 </body>
 </html>

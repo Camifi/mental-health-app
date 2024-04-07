@@ -1,65 +1,150 @@
+{% extends 'patient/base.html' %} 
 {% load static %} {% block content %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Our Team</title>
-    <link rel="stylesheet" href="{% static 'css/main1.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    <title>Detalle profesional</title>
+    <link rel="stylesheet" href="{% static 'css/profesional.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
   </head>
   <body>
-    <div class="professional-profile">
-      <div class="profile-header">
-        <img
+    <div class="container-detail">
+        <a href="javascript:history.back()" class="back-button">
+        <img src="{% static 'images/arrow-left.svg' %}">
+    </a>
+
+       <div class="profile-card"> 
+            <div class="profile-pic">
+                <img
           src="{{ professional.profile_image.url }}"
           alt="Profile Image"
           class="profile-image"
         />
-        <div class="profile-info">
-          <h1 class="profile-name">{{ professional.user.full_name }}</h1>
-          <p class="profile-title">{{ professional.title }}</p>
-          <p class="profile-specialization">
-            {{ professional.specialization }}
+            </div>
+
+            <div class="profile-details">
+                 <div class="intro">
+                    <h2>{{ professional.user.full_name }}</h2>
+                    <h4>{{ professional.title }}</h4>
+                    
+                 </div>
+
+                 <div class="contact-info">
+                    <div class="row">
+                         <div class="icon">
+                            <i class="fa fa-phone"  style="color:var(--dark-magenta)"></i>
+                         </div>
+                         <div class="content">
+                            <span>Celular</span>
+                            <h5>{{ professional.user.phone_number}}</h5>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="icon">
+                           <i class="fa fa-envelope-open"  style="color:var(--light-green)"></i>
+                        </div>
+                        <div class="content">
+                           <span>Correo electrónico</span>
+                           <h5>{{ professional.user.email}}</h5>
+                        </div>
+                   </div>
+    
+                  
+
+            </div>
+              <button class="connect-btn"> 
+    <a href="" style="color: inherit; text-decoration: none;">
+       <i class="fa-solid fa-user-group"></i> Conectar
+    </a>
+</button>
+            </div>
+       </div>
+
+    
+      <!----about section ----->
+       <div class="about">
+           <h1>Acerca de mí</h1>
+              <img src="{% static 'images/Group_3.svg' %}" alt="Decorative Circle" class="decorative-circle">
+
+           <p> {{ professional.biography }}
           </p>
+       
+       
+         
+<div class="work">
+    
+    <!-- Especialización -->
+    <div class="workbox">
+        <div class="icon" >
+            <img src="{% static 'images/grow.svg' %}" alt="" class="icons"> <!-- Asegúrate de tener un icono adecuado aquí -->
         </div>
-      </div>
-
-      <div class="profile-bio">
-        <h2>Acerca de </h2>
-        <p>{{ professional.biography }}</p>
-      </div>
-
-      <div class="profile-details">
-         <p><strong>Modalidad de Atención:</strong> 
-        {% if professional.session_modalities == 'Both' %}
-        Presencial y Virtual
-        {% else %}
-       {{ professional.get_session_modalities_display }}
-      {% endif %}
-      </p>
-        <p><strong>Horarios:</strong></p>
-      </div>
-
-      <div class="social-media">
-        {% if professional.social_media %}
-        <!-- Renderizar enlaces a redes sociales aquí -->
-        {% endif %}
-      </div>
-
-      <div class="contact-method">
-        <a href="https://wa.me/{{ professional.user.phone_number }}" class="whatsapp-link">
-        
-          WhatsApp
-        </a>
+        <div class="desc">
+            <h3>Especialización y Habilidades</h3>
+            <p>{{ professional.specialization }}</p>
+            <!-- Agrega más contenido si es necesario -->
+        </div>
     </div>
+
+    <!-- Experiencia y Formación -->
+    <div class="workbox">
+        <div class="icon">
+            <img src="{% static 'images/graduation.svg' %}" alt="" class="icons"> <!-- Asegúrate de tener un icono adecuado aquí -->
+        </div>
+        <div class="desc">
+            <h3>Formación Profesional</h3>
+            <p>{{ professional.certifications_or_courses }}</p>
+            <!-- Agrega más contenido si es necesario -->
+        </div>
+    </div>
+
+    <!-- Enfoque Terapéutico -->
+    <div class="workbox">
+        <div class="icon">
+            <img src="{% static 'images/notebook.svg' %}" alt=""class="icons"> 
+        </div>
+        <div class="desc">
+            <h3>Enfoque Terapéutico</h3>
+            <p>{{ professional.therapeutic_approaches }}</p>
+           
+        </div>
+    </div>
+
+    <!-- Logística y Disponibilidad -->
+   <div class="workbox">
+    <div class="icon" class="icons">
+          <img src="{% static 'images/calendar.svg' %}" alt=""class="icons"> 
+    </div>
+    <div class="desc">
+        <h3>Logística y Disponibilidad</h3>
+       <p> <strong>Modalidades de atención: </strong>
+            {% for mode in professional.session_modalities.all %}
+                {{ mode.get_name_display }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                No especificado
+            {% endfor %}
+        </p>
+        <p><strong>Ciudades donde atiende: </strong>
+            {% for city in professional.city_served.all %}
+                {{ city.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                No especificado
+            {% endfor %}
+        </p>
+         <p> <strong>Horarios disponibles: </strong>
+            {% for availability in professional.availability.all %}
+                {{ availability.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                No especificado
+            {% endfor %}
+        </p>
+    </div>
+</div>
+
+</div>
     {% endblock %}
   </body>
 </html>
