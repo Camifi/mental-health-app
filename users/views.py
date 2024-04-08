@@ -20,31 +20,22 @@ def signout(request):
 
 def homepage(request):
     return render(request,'home.html')
-def aviso(request):
-    return render(request,'aviso.html')
-#dashboard general
-def dashboard(request):
-    return render(request,'dashboard.html')
 
-@login_required(login_url="signin")
+@login_required
 def select_user_type(request):
     # Verificar si el usuario ya tiene un tipo de usuario establecido
-    if request.user.user_type:
-        # Si ya es un paciente o profesional, redirigir o mostrar un mensaje
+    if getattr(request.user, 'user_type', None):
         message = "Ya has seleccionado tu tipo de usuario."
         messages.add_message(request, messages.INFO, message)
-        return redirect('dashboard')  # O la página que consideres adecuada
+        return redirect('home')  # O la página de inicio adecuada según el tipo de usuario
 
     if request.method == "POST":
         user_type = request.POST.get('user_type')
         request.user.user_type = user_type
         request.user.save()
 
-        # Redirige a los usuarios para completar su información de perfil
-        if user_type == "P":  # Si el usuario es un paciente
-            return redirect('complete_user_common_info')
-        elif user_type == "PR":  # Si el usuario es un profesional
-            return redirect('complete_user_common_info')
+        # Redirige a todos los usuarios para completar su información común primero
+        return redirect('complete_user_common_info')
 
     return render(request, 'registration/select_user_type.html')
      
@@ -96,37 +87,41 @@ def signup(request):
 #selecciona el tipo de usuario y almacena en su tabla correspondiente
 @login_required(login_url="signin")
 def complete_user_common_info(request):
-    if request.method == 'POST':
-        form = UserCommonInfoForm(request.POST, instance=request.user)
+    if request.method == "POST":
+        # Aquí asumes que tienes un formulario para la información común
+        form = UserCommonInfoForm(request.POST)
         if form.is_valid():
-            form.save()
-            # Determinar a dónde redirigir después basándose en el tipo de usuario
-            if request.user.user_type == User.UserTypeChoices.PROFESSIONAL:
-                Professional.objects.get_or_create(user=request.user)
-                return redirect('complete_professional_profile')
-            else:
-               
-                Patient.objects.get_or_create(user=request.user)
-                return redirect('welcome') 
-    else:
-        form = UserCommonInfoForm(instance=request.user)
+            user_common_info = form.save(commit=False)
+            user_common_info.user = request.user
+            user_common_info.save()
 
+            # Comprobar el tipo de usuario y redirigir adecuadamente
+            if request.user.user_type == "PR":  # Profesional
+                return redirect('complete_professional_profile')
+            else:  # Paciente
+                return redirect('core:welcome')
+    else:
+        form = UserCommonInfoForm()
+    
     return render(request, 'complete_user_info.html', {'form': form})
 
 
 @login_required(login_url="signin")
 def complete_professional_profile(request):
-    profile = Professional.objects.get_or_create(user=request.user)
+    # Obtenemos el perfil del profesional, creándolo si no existe
+    profile, created = Professional.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
-        # Nota que ahora se pasa tanto request.POST como request.FILES
+        # Pasamos request.POST y request.FILES al formulario, junto con la instancia del perfil
         form = ProfessionalAdditionalInfoForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # Redirigir a donde corresponda
+            # Redirigir a la página de bienvenida específica para profesionales tras guardar
+            return redirect('core:professional_home')  # Asegúrate de que el nombre 'profesional-welcome' corresponda a tu URL configurada
     else:
         form = ProfessionalAdditionalInfoForm(instance=profile)
 
+    # Pasamos el formulario a la plantilla
     return render(request, 'complete_professional_profile.html', {'form': form})
 
 

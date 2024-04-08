@@ -1,11 +1,94 @@
 {% extends 'patient/base.html' %} 
-
+{% load static %} 
 {% block content %}
-<style>
+<style> 
+.page-body-wrapper{
+  overflow-y: auto;
+}
+.icon-clear-chat {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px; 
+
+  color: #fff; 
+  border-radius: 50%; 
+  text-decoration: none; 
+}
+.typing-indicator span {
+  display: inline-block;
+  margin: 0 2px;
+  animation: typing 1.4s infinite;
+  color: #000;
+  font-size: 24px;
+
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0% { opacity: 0; }
+  40% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 1; }
+}
+/* El scrollbar en sí */
+::-webkit-scrollbar {
+  width: 6px; /* Ancho del scrollbar */
+}
+
+/* El fondo del scrollbar (la parte que "contiene" la barra) */
+::-webkit-scrollbar-track {
+  background: #555; /* Color de fondo */
+}
+
+/* La barra de desplazamiento (el thumb) */
+::-webkit-scrollbar-thumb {
+  background: #717BBC; /* Color de la barra */
+  border-radius: 2px; /* Bordes redondeados */
+}
+
+/* El estado hover de la barra de desplazamiento */
+::-webkit-scrollbar-thumb:hover {
+  background: #717BBC;; /* Color de la barra al pasar el mouse */
+}
+.bot-icon{
+  width: 40px;
+  display: block;
+  margin-bottom: 5px;
+}
+.material-symbols-outlined {
+  background: #717BBC;
+      border-radius: 4px;
+    margin: 0 10px 7px 0;
+    color: #fff;
+    padding: 5px;
+}
+.chatbot-header {
+     padding: 16px 0;
+  position: relative;
+  text-align: center;
+  color: #fff;
+  background: #717BBC;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+border-radius: 10px 10px 0px 0px;
+  
+  }
   .messages-box {
+    background: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
+              0 32px 64px -48px rgba(0,0,0,0.5);
     flex: 1;
     overflow-y: auto;
   }
+  
 
   .messages-list {
     padding-left: 0;
@@ -21,15 +104,7 @@
     border-radius: 5px;
   }
 
-  .sent {
-    background-color: #dcf8c6;
-    align-self: flex-end;
-  }
-
-  .received {
-    background-color: #f1f0f0;
-    align-self: flex-start;
-  }
+  
 
   .message-form {
     display: flex;
@@ -37,60 +112,97 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 10px;
-    background-color: #f8f9fa;
+    
+    background-color: #fff;
   }
 
   .message-input {
     flex: 1;
     border-radius: 0;
     border-right: none;
+  
   }
 
   .btn-send {
-    border-radius: 0;
+    border: none;
+    background-color: #717BBC;
+    border-radius: 0px;
   }
 
   .chat-container {
-    height: 100%;
+    height: 200px;
     display: flex;
     width: 100%;
-    
+    margin: 20px 100px 0px 100px;
     flex-direction: column;
   }
+  .input-group{
+    border-top: 1px solid #ddd;
+  }
+  .messages-box {
+  height: 60vh;
+  overflow-y: auto;
+}
+
+.messages-list {
+  padding-left: 0;
+}
+
+/* Estilos para mensajes enviados por el usuario */
+.sent-message .message-text {
+  background-color: #717BBC; /* Color de fondo claro para mensajes enviados */
+  color: #fff; /* Color del texto */
+  border-radius: 10px 10px 0 10px;
+  padding: 5px 25px 5px 25px; /* Espacio alrededor del texto */
+  border-radius: 15px; /* Bordes redondeados */
+  margin: 5px 0; /* Margen arriba y abajo */
+  display: inline-block; /* Hace que el fondo solo rodee el texto */
+  max-width: 70%; /* Máximo ancho del mensaje */
+  align-self: flex-end; /* Alinea a la derecha */
+}
+
+/* Estilos para mensajes recibidos del chatbot */
+.received-message .message-text {
+  background-color: #F8F7FF; /* Color de fondo diferente para mensajes recibidos */
+  color: #000; /* Color del texto */
+  padding: 10px; /* Espacio alrededor del texto */
+  border-radius: 15px; /* Bordes redondeados */
+  margin: 5px 0; /* Margen arriba y abajo */
+  display: inline-block; /* Hace que el fondo solo rodee el texto */
+  max-width: 80%; /* Máximo ancho del mensaje */
+  align-self: flex-start; /* Alinea a la izquierda */
+}
+
 </style>
 
 <div class="chat-container">
   <div class="card flex-grow-1">
-    <div class="card-header bg-primary text-white">
+    <div class="chatbot-header">
       <b>Bienvenid@, {{ user.username }}</b>
     
-      <a
-        href="{% url 'core:clear_chat' user_id=user.id %}"
-        id="clear-messages"
-        class="btn btn-warning"
-        style="display: inline-block; margin-left: auto"
-      >
-        Limpiar Conversacion
-      </a>
+      <a href="{% url 'core:clear_chat' user_id=user.id %}" id="clear-messages" class="icon-clear-chat">
+<i class="fa-regular fa-trash-can"></i>
+</a>
     </div>
     <div class="card-body messages-box">
       <ul
         class="list-unstyled messages-list"
         style="height: 60vh; overflow-y: auto"
       >
-        {% for message in chats %}
-        <li>
-          <div class="message-text">
-            <div class="message-sender">
-              <b>{{ message.is_from_user|yesno:"You,AI Chatbot" }}</b>
-            </div>
-            <div class="message-content">{{message.content}}</div>
-          </div>
-        </li>
-        {% endfor %}
-
-        <!-- Aquí se añadirán los mensajes dinámicamente -->
+       {% for message in chats %}
+    <li class="{{ message.is_from_user|yesno:'sent-message,received-message' }}">
+      <div class="message-text">
+        <div class="message-sender">
+          {% if message.is_from_user %}
+            
+          {% else %}
+            <img src="{% static 'images/g616.svg' %}" class="bot-icon" alt="AI Chatbot" />
+          {% endif %}
+        </div>
+        <div class="message-content">{{ message.content }}</div>
+      </div>
+    </li>
+    {% endfor %}
       </ul>
     </div>
   </div>
@@ -100,22 +212,23 @@
       <input
         type="text"
         class="form-control message-input"
-        placeholder="Type your message..."
+        placeholder="Escribe tu mensaje..."
       />
       <div class="input-group-append">
-        <button type="submit" class="btn btn-primary btn-send">Send</button>
+        <button type="submit" class="btn btn-primary btn-send">Enviar</button>
       </div>
     </div>
   </form>
 </div>
 
 <script>
+ 
+ document.addEventListener("DOMContentLoaded", function() {
   const messagesList = document.querySelector(".messages-list");
   const messageForm = document.querySelector(".message-form");
   const messageInput = document.querySelector(".message-input");
   const clearMessagesButton = document.getElementById("clear-messages");
 
-  // Manejador del evento de envío del formulario.
   messageForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -124,45 +237,82 @@
       return;
     }
 
-    // Lógica para enviar el mensaje al servidor y recibir la respuesta.
-    fetch("", {
+    // Añadir mensaje enviado por el usuario a la lista inmediatamente
+    addMessageToList(message, true);
+    messageInput.value = ""; // Limpiar el input después de enviar.
+
+    // Añadir el indicador de "pensando..." justo después de enviar el mensaje
+    addTypingIndicator();
+
+    // Simula el envío del mensaje al servidor y espera la respuesta
+    fetch("", { // Asegúrate de reemplazar "tu_endpoint_aqui" con la URL correcta.
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        csrfmiddlewaretoken: document.querySelector(
-          "[name=csrfmiddlewaretoken]"
-        ).value,
+        csrfmiddlewaretoken: document.querySelector("[name=csrfmiddlewaretoken]").value,
         message: message,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        addMessageToList("You", message, true);
-        addMessageToList("AI Chatbot", data.response, false);
-        messageInput.value = ""; // Limpiar el input después de enviar.
-      });
+    .then((response) => response.json())
+    .then((data) => {
+       removeTypingIndicator(); // Remueve el efecto de "typing" ANTES de mostrar la respuesta del bot
+      addMessageToList(data.response, false); // Añade la respuesta del bot
+      scrollToBottom(); // Asegura que el scroll baje al último mensaje
+    });
   });
 
-  // Función para añadir mensajes a la lista.
-  function addMessageToList(sender, content, isSent) {
+  function addMessageToList(content, isSent) {
     const messageItem = document.createElement("li");
-    messageItem.classList.add("message", isSent ? "sent" : "received");
-    messageItem.innerHTML = `
-      <div class="message-text">
-        <div class="message-sender"><b>${sender}</b></div>
-        <div class="message-content">${content}</div>
-      </div>`;
+    messageItem.className = isSent ? "sent-message" : "received-message";
+
+    const messageContentDiv = document.createElement("div");
+    messageContentDiv.className = "message-text";
+
+    if (!isSent) {
+      // Si el mensaje es del bot, incluir el ícono
+      const botIcon = document.createElement("img");
+      botIcon.src = "{% static 'images/g616.svg' %}"; // Asegúrate de tener la ruta correcta
+      botIcon.alt = "AI Chatbot";
+      botIcon.className = "bot-icon";
+      messageContentDiv.appendChild(botIcon);
+    }
+
+    const textNode = document.createElement("span");
+    textNode.textContent = content;
+    messageContentDiv.appendChild(textNode);
+
+    messageItem.appendChild(messageContentDiv);
     messagesList.appendChild(messageItem);
-    scrollToBottom();
+  }
+
+function addTypingIndicator() {
+  const typingIndicator = document.createElement("li");
+  typingIndicator.className = "typing-indicator";
+  typingIndicator.id = "typing-indicator"; // Asegúrate de asignar un ID aquí para poder encontrarlo después
+  for (let i = 0; i < 3; i++) {
+    const dot = document.createElement("span");
+    dot.textContent = ".";
+    typingIndicator.appendChild(dot);
+  }
+  messagesList.appendChild(typingIndicator);
+  scrollToBottom();
+}
+
+  function removeTypingIndicator() {
+    const typingIndicator = document.getElementById("typing-indicator");
+    if (typingIndicator) {
+      typingIndicator.remove();
+    }
   }
 
   function scrollToBottom() {
     messagesList.scrollTop = messagesList.scrollHeight;
   }
 
-  // Manejador para el botón de limpiar mensajes.
   clearMessagesButton.addEventListener("click", () => {
     messagesList.innerHTML = ""; // Limpia la lista de mensajes.
   });
+});
+
 </script>
 {% endblock %}

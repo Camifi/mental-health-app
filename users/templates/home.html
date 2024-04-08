@@ -1,26 +1,98 @@
-{% extends 'base.html' %} {% block content %} {% load static %}
+ {% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
 
-<div class="container my-5">
-  <div class="row">
-    <div class="col-lg-6">
-      <h1 class="display-4">Conecta, Comunica, Cuida</h1>
+<head>
+    <meta charset="utf-8">
+    
+    <!--====== Title ======-->
+    <title>Mental health App</title>
+    
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <p class="lead">
-        A través de nuestra aplicación, facilitamos una comunicación efectiva y
+
+        
+    <!--====== Animate CSS ======-->
+     <link rel="stylesheet" href="{% static 'css/assets-home/animate.css' %}">
+        
+        
+    <!--====== Bootstrap CSS ======-->
+       <link rel="stylesheet" href="{% static 'css/assets-home/bootstrap.min.css' %}">
+
+    
+    <!--====== Style CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/assets-home/style.css' %}">
+    
+</head>
+
+{% block content %}
+
+
+
+        <div id="home" class="header-hero bg_cover d-lg-flex align-items-center">
+            
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+       
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+            <div class="shape shape-6"></div>
+            
+            <div class="container">
+                <div class="row align-items-center justify-content-center justify-content-lg-between">
+                    <div class="col-lg-6 col-md-10">
+                        <div class="header-hero-content">
+                            <h3 class="header-title wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.2s"><span>Conecta, Comunica </span> y Cuida</h3>
+                            <p class="text wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.6s"> A través de nuestra aplicación, facilitamos una comunicación efectiva y
         eficiente antes de las consultas presenciales, utilizando un chatbot
         inteligente como puente entre pacientes y doctores.
-      </p>
-      <a href="#" class="btn btn-primary btn-lg">Descubre Cómo Funciona</a>
-    </div>
-    <div class="col-lg-6">
-      <!-- Static image -->
-      <img
-        src="{% static 'images/foto1.png' %}"
-        alt="Decorative Image"
-        class="img-fluid"
-      />
-    </div>
-  </div>
+                             <div class="button-container">
+    <a href="signup" rel="nofollow" class="main-btn wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.8s">Registrarse</a>
+    <a href="signin" rel="nofollow" class="main-btn wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.8s">Iniciar Sesión</a>
 </div>
+                            
+                            </ul>
+                        </div> <!-- header hero content -->
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-10">
+                        <div class="header-image">
+                     
+                            <img src="{% static 'images/otro.svg' %}" alt="app" class="image wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                            <div class="image-shape wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.8s">
+                              
+                            </div>
+                        </div> <!-- header image -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+           
+            
+            <div class="header-shape-2">
+                 <img src="{% static 'images/header-shape-2.svg' %}" alt="shape">
+            </div> <!-- header shape -->
+        </div> <!-- header hero -->
+
+    
+    
+    <!--====== Main js ======-->
+  
+  <script>
+window.addEventListener('load', (event) => {
+    setTimeout(() => {
+        const preloader = document.querySelector('.preloader');
+        if(preloader) {
+            preloader.classList.add('hidden');
+        }
+    }, 2000);
+});
+</script>
+
+    </script>
+    
+</body>
+
+</html>
+
 
 {% endblock %}

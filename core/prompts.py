@@ -60,7 +60,7 @@ def get_patient_completed_prompt(patient, user):
             f"El usuario al que vas a atender se llama {user.full_name} y dale soporte en todo lo que necesite."
             f"La fecha de cumpleaños del usuario  {user.birthday} su edad es el anio de nacimiento - el anio actual(2024) "
             f"sdad {user.city}"
-            # f"sdad {user.full_name}"
+            f"sdad {user.full_name}"
             "Si el usuario solicita que le recomendemos un profesional"
             "recomienda de la siguiente lista:\n"
             )

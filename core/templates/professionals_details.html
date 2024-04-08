@@ -18,11 +18,12 @@
 
        <div class="profile-card"> 
             <div class="profile-pic">
-                <img
-          src="{{ professional.profile_image.url }}"
-          alt="Profile Image"
-          class="profile-image"
-        />
+                {% if professional.profile_image %}
+  <img src="{{ professional.profile_image.url }}" alt="Imagen de perfil">
+{% else %}
+  <p>No hay imagen de perfil disponible.</p>
+{% endif %}
+                
             </div>
 
             <div class="profile-details">
