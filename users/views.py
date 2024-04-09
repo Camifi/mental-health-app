@@ -34,11 +34,18 @@ def select_user_type(request):
         request.user.user_type = user_type
         request.user.save()
 
-        # Redirige a todos los usuarios para completar su información común primero
-        return redirect('complete_user_common_info')
+        # Si el usuario es un paciente, redirige para completar su información común
+        if user_type == User.UserTypeChoices.PATIENT:
+            return redirect('complete_user_common_info')
+        # Si el usuario es un profesional, redirige para completar su información común
+        # y luego su información profesional
+        elif user_type == User.UserTypeChoices.PROFESSIONAL:
+            # Aquí puedes guardar alguna información en la sesión para saber después de completar
+            # la info común, redirigir al usuario para que complete la info profesional.
+            request.session['complete_professional_profile'] = True
+            return redirect('complete_user_common_info')
 
     return render(request, 'registration/select_user_type.html')
-     
 
 def signin(request):
     if request.method == 'POST':
@@ -99,7 +106,7 @@ def complete_user_common_info(request):
             if request.user.user_type == "PR":  # Profesional
                 return redirect('complete_professional_profile')
             else:  # Paciente
-                return redirect('core:welcome')
+                return redirect('core:profesional_home')
     else:
         form = UserCommonInfoForm()
     

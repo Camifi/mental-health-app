@@ -665,11 +665,6 @@ p {
     transform: scale(1.4);
     opacity: 0; } }
 
-/* Esta clase es para asegurar que el contenedor padre tenga posición relativa */
-.col-lg-4.col-md-6.col-sm-6.col-10 {
-  position: relative;
-   /* Esto puede ser ajustado según la altura deseada */
-}
 
 .header-image {
     position: relative;
@@ -704,17 +699,114 @@ p {
 
 /* SELECT USER TYPE  */
 
-.onboarding text-center .h1{
-
-  font-size: 70px;
-padding-top: 20px;
-font-family: 'Fredoka One', cursive;
+.contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 100vh;
+    position: relative;
+    padding: 20px;
 }
 
-.lead{
-  line-height: 30px;
-font-size: 20px;
-font-family: sans-serif;
-color: #444;
-padding-top: 20px;
+.ilustracion-persona,
+.ilustracion-burbuja {
+    position: absolute;
+}
+
+.ilustracion-persona {
+    left: 0;  /* Ajusta este valor para posicionar la ilustración de la persona */
+    bottom: 0;
+    width: 350px;
+}
+
+.ilustracion-burbuja {
+    right: 0;  /* Ajusta este valor para posicionar la burbuja */
+    top: 0;
+}
+
+.contenido {
+    z-index: 10;
+     max-width: 800px; /* Ajusta este valor basado en el ancho de tu contenido */
+   
+}
+
+.titulo-bienvenida {
+    font-size: 65px;
+    color: #717BBC;
+    line-height: 75px;
+    margin-bottom: 20px;
+ 
+}
+
+p {
+    font-size: 17px;
+    color: #333333;
+    margin-bottom: 2rem;
+    
+}
+
+@media (max-width: 768px) {
+    .contenedor {
+        flex-direction: column;
+    }
+
+    .ilustracion-persona,
+    .ilustracion-burbuja {
+        position: static;
+        margin-bottom: 20px;
+    }
+
+    .contenido {
+        order: 2;
+    }
+}
+.btn-principal{
+  font-family: "Poppins", sans-serif;
+   font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 25px;
+  font-size: 16px;
+  height: 55px;
+  line-height: 51px;
+  border-radius: 50px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 5;
+  -webkit-transition: all 0.4s ease-out 0s;
+  -moz-transition: all 0.4s ease-out 0s;
+  -ms-transition: all 0.4s ease-out 0s;
+  -o-transition: all 0.4s ease-out 0s;
+  transition: all 0.4s ease-out 0s;
+  background-color: #717BBC;
+  border: 1px solid #717BBC;
+}
+.btn-principal:hover {
+    background-color: transparent;
+    color: #717BBC;
+    border: 1px solid #717BBC; }
+
+    /* Estilos y animaciones adicionales */
+
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0, 20px, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+.fadeInUp {
+    animation-name: fadeInUp;
+    animation-duration: 1s;
+    animation-fill-mode: both;
 }

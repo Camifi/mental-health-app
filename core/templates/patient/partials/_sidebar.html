@@ -1,21 +1,23 @@
   <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
-      <li class="nav-item">
+      <li class="nav-item {% if request.resolver_match.url_name == 'patient_home' %}active{% endif %}" >
         <a class="nav-link" href="{% url 'core:patient_home' %}">
           <i class="ti-home menu-icon"></i>
-          <span class="menu-title">Inicio</span>
+          <span class="menu-title">Inicio de Pacientes</span>
         </a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'core:chatbot' %}">
-          <i class="ti-comment-alt menu-icon"></i>
-          <span class="menu-title">Chatbot</span>
-        </a>
-      </li>
-      <li class="nav-item">
+      <li class="nav-item {% if request.resolver_match.url_name == 'chatbot' %}active{% endif %}" >
+  <a class="nav-link" href="{% url 'core:chatbot' %}">
+    <i class="fa-regular fa-comment-dots menu-icon"></i>
+    <span class="menu-title">Chatbot</span>
+  </a>
+</li>
+
+
+      <li class="nav-item {% if request.resolver_match.url_name == 'list_professionals' %}active{% endif %}" >
         <a class="nav-link" href="{% url 'core:list_professionals' %}">
-          <i class="ti-user menu-icon"></i>
+          <i class="fa-solid fa-user-group menu-icon"></i>
           <span class="menu-title">Profesionales</span>
         </a>
       </li>
@@ -28,7 +30,7 @@
           aria-expanded="false"
           aria-controls="charts"
         >
-          <i class="icon-bar-graph menu-icon"></i>
+          <i class="fa-solid fa-gears menu-icon"></i>
           <span class="menu-title">Perfil</span>
           <i class="menu-arrow"></i>
         </a>

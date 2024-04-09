@@ -1,45 +1,35 @@
- {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Bienvenido</title>
-     <!--====== Style CSS ======-->
-    <link rel="stylesheet" href="{% static 'css/assets-home/style.css' %}">
-  </head>
-  <body>
-    <div class="container mt-5">
-      <div class="onboarding text-center">
-        <h1>Bienvenido!</h1>
-        <p class="lead">Ahora estás registrado y listo para comenzar.</p>
-        <p>
-          Antes de continuar, podrías indicarnos la finalidad de tu uso para con
-          la app
-        </p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida</title>
+   <link rel="stylesheet" href="{% static 'css/assets-home/style.css' %}">
+</head>
+<body>
+    <div class="contenedor">
+        <!-- Ilustración de la persona con el teléfono -->
+        <div class="ilustracion-persona fadeInUp">
+            <img src="{% static 'images/join.svg' %}" alt="Persona con teléfono">
+        </div>
 
-        <form method="post" action="{% url 'select_user_type' %}">
-          {% csrf_token %}
-          <button
-            type="submit"
-            name="user_type"
-            value="P"
-            class="main-btn"
-          >
-            Busco ayuda
-          </button>
-          <button
-            type="submit"
-            name="user_type"
-            value="PR"
-            class="main-btn"
-          >
-            Soy profesional
-          </button>
-        </form>
+        <!-- Contenido principal -->
+        <div class="contenido">
+            <h2 class="titulo-bienvenida fadeInUp">Comienza tu viaje hacia el bienestar</h2>
+            <p>Para personalizar tu experiencia, elige el perfil que mejor se ajuste a tu rol. ¿Eres un profesional en busca de conectar con pacientes o estás buscando apoyo? Tu elección aquí nos ayuda a ofrecerte el contenido y las herramientas más relevantes.</p>
+          <form method="post" action="{% url 'select_user_type' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-principal" name="user_type" value="P" class="main-btn">Busco ayuda</button>
+                <button type="submit" class="btn-principal" name="user_type" value="PR" class="main-btn">Soy profesional</button>
+            </form>
+          </div>
 
-        <!-- Incluye navegación adicional si es necesario -->
-      </div>
+        <!-- Ilustración de la burbuja decorativa -->
+        <div class="ilustracion-burbuja">
+            <img src="{% static 'images/header-shape-2.svg' %}" alt="Burbuja decorativa">
+        </div>
     </div>
-   
-  </body>
+    </div>
+</body>
 </html>
