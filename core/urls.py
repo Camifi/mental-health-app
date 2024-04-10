@@ -4,17 +4,21 @@ from core import views
 from mental_health_app import settings
 
 urlpatterns = [
-    
-    path('chatbot/',views.chatbot, name='chatbot'),
-    path('professional-chatbot/',views.chatbot_profesional, name='chatbot-professional'),
-     path('professional/welcome', views.welcome_professional, name='professional_home'),
-     
+    # rutas para patient
     path('welcome/', views.dashboard_patient, name='patient_home'),
+    path('chatbot/',views.chatbot, name='chatbot'),
+    path('clear-chat/<int:user_id>/', views.clear_chat, name='clear_chat'),
     path('professionals/', views.list_professionals, name='list_professionals'),
     path('professionals/<slug:slug>/', views.professional_detail, name='professional_detail'),
-    path('clear-chat/<int:user_id>/', views.clear_chat, name='clear_chat'),
+    path('connect/<int:professional_id>/', views.connectProfessional, name='connect_professional'),
+    path('disconnect/', views.disconnectProfessional, name='disconnect_professional'),
     
-
+     
+    # rutas para professional
+    path('professional/welcome/', views.welcome_professional, name='professional_home'),
+    path('professional/chatbot/',views.chatbot_profesional, name='chatbot-professional'),
+    path('professional/patients/', views.list_patients, name='professional_patients'),
+    path('professional/patients/<int:id>/', views.show_patient, name='professional_patient_detail'),
    
 ] 
 

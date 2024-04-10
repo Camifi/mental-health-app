@@ -1,11 +1,13 @@
 {% extends 'patient/base.html' %} 
-{% load static %} {% block content %}
+{% load static %} 
+{% block content %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detalle profesional</title>
+    <!-- myTODO: mover import de css a base y borrar head, body, html y doctype -->
     <link rel="stylesheet" href="{% static 'css/profesional.css' %}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
@@ -53,15 +55,24 @@
                            <h5>{{ professional.user.email}}</h5>
                         </div>
                    </div>
-    
-                  
-
             </div>
+
+
+            {% if not patient.professional %}
               <button class="connect-btn"> 
-    <a href="" style="color: inherit; text-decoration: none;">
-       <i class="fa-solid fa-user-group"></i> Conectar
-    </a>
-</button>
+                <a href="{% url 'core:connect_professional' professional_id=professional.id %}" style="color: inherit; text-decoration: none;">
+                <i class="fa-solid fa-user-group"></i> Conectar
+                </a>
+            </button>
+            {% endif %}
+
+            {% if patient.professional.id == professional.id %}
+              <button class="connect-btn"> <!-- myTODO: poner boton de color rojo -->
+                <a href="{% url 'core:disconnect_professional' %}" style="color: inherit; text-decoration: none;">
+                <i class="fa-solid fa-user-group"></i> Desconectar
+                </a>
+            </button>
+            {% endif %}
             </div>
        </div>
 

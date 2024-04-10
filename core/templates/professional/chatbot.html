@@ -1,16 +1,6 @@
 {% extends "professional/base.html" %} 
 {% load static %} 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>test</title>
-  <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
-  
-</head>
-
 <div class="chat-container">
   <div class="card flex-grow-1">
     <div class="chatbot-header">
@@ -58,7 +48,7 @@
 </div>
 
 <script>
- 
+ // myTODO: mover a un chatbot.js e importar  
  document.addEventListener("DOMContentLoaded", function() {
   const messagesList = document.querySelector(".messages-list");
   const messageForm = document.querySelector(".message-form");

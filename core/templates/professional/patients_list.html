@@ -1,0 +1,20 @@
+{% extends "professional/base.html" %} 
+{% load static %} 
+{% block content %}
+<div>
+     {% if patients %}
+        <h2>Mis Pacientes</h2>
+        <ul class="list-group">
+            {% for patient in patients %}
+                <li class="list-group-item">
+                    {{ patient.user.full_name }} - {{ patient.therapy_goals }}
+                    <!-- Puedes agregar más atributos del paciente aquí -->
+                    <a href="{% url 'core:professional_patient_detail' id=patient.id %}" class="btn btn-primary">Ver más</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tienes pacientes asignados aún.</p>
+    {% endif %}
+</div>
+{% endblock %}

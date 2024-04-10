@@ -1,0 +1,43 @@
+{% extends "professional/base.html" %}
+{% load static %}
+
+{% block content %}
+<div>
+    <h1>Paciente X</h1>
+    <table class="table">
+        <tbody>
+            <!-- Nombre Completo -->
+            <tr>
+                <th scope="row">Nombre Completo</th>
+                <td>{{ patient.user.full_name }}</td>
+            </tr>
+            <!-- Médico de Cabecera -->
+            <tr>
+                <th scope="row">Médico de Cabecera</th>
+                <td>{{ patient.primary_care_physician }}</td>
+            </tr>
+            <!-- Experiencia con Terapia Anterior -->
+            <tr>
+                <th scope="row">Experiencia con Terapia Anterior</th>
+                <td>{{ patient.previous_therapy_experience }}</td>
+            </tr>
+            <!-- Motivo de la Consulta -->
+            <tr>
+                <th scope="row">Motivo de la Consulta</th>
+                <td>{{ patient.reason_for_therapy }}</td>
+            </tr>
+            <!-- Descripción de Síntomas -->
+            <tr>
+                <th scope="row">Descripción de Síntomas</th>
+                <td>{{ patient.symptoms_description }}</td>
+            </tr>
+            <!-- Objetivos de la Terapia -->
+            <tr>
+                <th scope="row">Objetivos de la Terapia</th>
+                <td>{{ patient.therapy_goals }}</td>
+            </tr>
+            <!-- Añade más filas según sea necesario para otros atributos -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}

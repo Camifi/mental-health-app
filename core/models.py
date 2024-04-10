@@ -9,35 +9,6 @@ from django.db.models.functions import Length
 # Esto obtendrá el modelo de usuario personalizado
 User = get_user_model()
 
-
-
-
-class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile')
-    primary_care_physician = models.CharField(_("Médico de Cabecera"), max_length=255, blank=True, null=True)
-    previous_therapy_experience = models.TextField(_("Realizo terapia anteriormente"), blank=True, null=True)
-    reason_for_therapy = models.TextField(_("Motivo de la consulta"))
-    therapy_schedule_preference = models.CharField(_("Preferencia horaria"), max_length=255)
-    symptoms_description = models.TextField(_("Descripcion de Síntomas"))
-    therapy_goals = models.TextField(_("Objetivos de la terapia"))
-    THERAPIST_GENDER_CHOICES = [
-        ('M', 'Masculino'),
-        ('F', 'Femenino'),
-        ('N', 'No tengo preferencia'),  # Agrega esta nueva opción
-    ]
-
-    therapist_gender_preference = models.CharField(
-        _("Preferencia de Terapeuta"),
-        max_length=1,  # Considera cambiar esto si el identificador de tu nueva opción es más largo
-        choices=THERAPIST_GENDER_CHOICES,
-        blank=True)
-    def __str__(self):
-        # Asegúrate de que 'full_name' es el campo correcto en tu modelo de User.
-        # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
-        return self.user.full_name
-    
-
-
 class AvailabilityOption(models.Model):
     name = models.CharField(max_length=10, unique=True)
 
@@ -48,6 +19,7 @@ class GroupOption(models.Model):
 
     def __str__(self):
         return self.name
+
 # Modelo CityOption
 class CityOption(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -86,6 +58,33 @@ class Professional(models.Model):
         # Asegúrate de que 'full_name' es el campo correcto en tu modelo de User.
         # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
         return self.user.full_name
+
+
+class Patient(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile')
+    professional = models.ForeignKey(Professional, on_delete=models.CASCADE, related_name='patients', null=True, blank=True)
+    primary_care_physician = models.CharField(_("Médico de Cabecera"), max_length=255, blank=True, null=True)
+    previous_therapy_experience = models.TextField(_("Realizo terapia anteriormente"), blank=True, null=True)
+    reason_for_therapy = models.TextField(_("Motivo de la consulta"))
+    therapy_schedule_preference = models.CharField(_("Preferencia horaria"), max_length=255)
+    symptoms_description = models.TextField(_("Descripcion de Síntomas"))
+    therapy_goals = models.TextField(_("Objetivos de la terapia"))
+    THERAPIST_GENDER_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino'),
+        ('N', 'No tengo preferencia'),  # Agrega esta nueva opción
+    ]
+
+    therapist_gender_preference = models.CharField(
+        _("Preferencia de Terapeuta"),
+        max_length=1,  # Considera cambiar esto si el identificador de tu nueva opción es más largo
+        choices=THERAPIST_GENDER_CHOICES,
+        blank=True)
+    def __str__(self):
+        # Asegúrate de que 'full_name' es el campo correcto en tu modelo de User.
+        # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
+        return self.user.full_name
+
 
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')

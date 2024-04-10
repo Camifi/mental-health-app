@@ -1,10 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import JsonResponse
-from django.urls import resolve, reverse
-from .models import User
 from .models import Message, Patient, Professional
 from .helpers import ask_openai, create_patient
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
 from .models import Message, Patient  
 from .prompts import get_initial_prompt, get_patient_completed_prompt
@@ -72,9 +69,12 @@ def list_professionals(request):
     professionals = Professional.objects.all()  # Obtén todos los objetos Professional
     return render(request, 'list_professionals.html', {'professionals': professionals})
 
+@login_required
 def professional_detail(request, slug):
     professional = get_object_or_404(Professional, slug=slug)
-    return render(request, 'professionals_details.html', {'professional': professional})
+    user = request.user
+    patient = Patient.objects.get(user=user.id)
+    return render(request, 'professionals_details.html', {'professional': professional, 'patient': patient})
 
 def clear_chat(request, user_id):
     # Obtener todos los mensajes del usuario especificado
@@ -98,4 +98,63 @@ def dashboard_patient(request):
     user = request.user
     return render(request,'patient\home.html', {'user': user})
 
+@login_required
+def list_patients(request):
+    try:
+        professional = Professional.objects.get(user=request.user)
+        patients = professional.patients.all()
+    except Professional.DoesNotExist:
+        # Manejo del caso en que el usuario no tenga un perfil de profesional asociado
+        patients = []
+    
+    return render(request, 'professional\patients_list.html', {'patients': patients})
 
+@login_required
+def show_patient(request, id):
+    try:
+        professional = Professional.objects.get(user=request.user)
+    except Professional.DoesNotExist:
+        # Si el usuario no tiene un perfil de profesional, devuelve un 404 directamente.
+        raise Http404("No se encontró el perfil profesional correspondiente.")
+
+    # Intenta obtener el paciente asegurándote de que pertenezca al profesional actual.
+    # Usamos 'get_object_or_404' para levantar automáticamente un 404 si el paciente no existe o no pertenece al profesional.
+    patient = get_object_or_404(Patient, id=id, professional=professional)
+
+    return render(request, 'professional/patient_detail.html', {'patient': patient})
+
+@login_required
+def connectProfessional(request, professional_id):
+    # Recupera el usuario de la sesión
+    user = request.user
+    
+    # Intenta recuperar el perfil de Patient asociado al usuario
+    try:
+        patient = Patient.objects.get(user=user)
+    except Patient.DoesNotExist:
+        # Si el usuario no tiene un perfil de Patient, redirige a la página anterior
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Verifica si el Patient ya tiene un Professional asignado
+    if patient.professional is not None:
+        # Si ya tiene un Professional asignado, redirige a la página anterior
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Verifica que el Professional con el ID proporcionado exista
+    professional = get_object_or_404(Professional, pk=professional_id)
+
+    # Asigna el Professional al Patient y guarda el cambio
+    patient.professional = professional
+    patient.save()
+
+    # Redirige al usuario a la página anterior
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def disconnectProfessional(request):
+    user = request.user
+    patient = Patient.objects.get(user=user.id)
+    patient.professional = None
+    patient.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
