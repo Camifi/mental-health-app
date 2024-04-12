@@ -88,12 +88,12 @@ def clear_chat(request, user_id):
     # Redirigir a otra vista
     return redirect('core:chatbot')
 
-#vista chatbot profesional 
+# myTODO: vista chatbot profesional 
 def chatbot_profesional(request):
-        return render(request,'professional\chatbot.html')
+    return render(request,'professional\chatbot.html')
 
 def welcome_professional(request):
-        return render(request,'professional\home.html')
+    return render(request,'professional\home.html')
 
 @login_required
 def dashboard_patient(request):
