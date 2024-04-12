@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Message, Patient, Professional
+from .models import Message, Patient, Professional, Session
 from .helpers import ask_openai, create_patient
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
-from .models import Message, Patient  
-from .prompts import get_initial_prompt, get_patient_completed_prompt
+from .models import Message, Patient 
+from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation
 from django.contrib.auth.decorators import login_required
+from .forms import SessionForm, PatientSessionForm
+from django.contrib import messages
 
 def chatbot(request):
     if request.method == 'POST':
@@ -111,17 +113,37 @@ def list_patients(request):
 
 @login_required
 def show_patient(request, id):
-    try:
-        professional = Professional.objects.get(user=request.user)
-    except Professional.DoesNotExist:
-        # Si el usuario no tiene un perfil de profesional, devuelve un 404 directamente.
-        raise Http404("No se encontró el perfil profesional correspondiente.")
-
-    # Intenta obtener el paciente asegurándote de que pertenezca al profesional actual.
-    # Usamos 'get_object_or_404' para levantar automáticamente un 404 si el paciente no existe o no pertenece al profesional.
+    professional = get_object_or_404(Professional, user=request.user)
     patient = get_object_or_404(Patient, id=id, professional=professional)
+    sessions = Session.objects.filter(patient=patient, professional=professional)
 
-    return render(request, 'professional/patient_detail.html', {'patient': patient})
+    # if request.method == 'POST':
+    #     print("RECIBIENDO DATOS")
+    #     form = PatientSessionForm(request.POST, professional=professional)
+    #     if form.is_valid():
+    #         session = form.save(commit=False)
+    #         session.professional = professional
+    #         session.patient = patient
+    #         print("FORM VALIDO")
+    #         print(session)
+    #         session.save()
+    #         messages.success(request, 'La sesión ha sido guardada con éxito.')
+    #         return redirect('core:professional_patient_detail', id=patient.id) 
+    #     else:
+    #         messages.error(request, 'Hubo un error al guardar la sesión. Por favor, revise los datos ingresados.')
+    # else:
+    #     form = PatientSessionForm()
+    # Crear una cadena de texto con la información del paciente y sus sesiones
+    prompt = get_session_recommendation(patient, sessions)
+    recommendation = ask_openai([], prompt)
+    print(recommendation)
+
+    return render(request, 'professional/patient_detail.html', {
+        'patient': patient,
+        # 'form': form
+        'sessions': sessions,
+        'recommendation': recommendation
+    })
 
 @login_required
 def connectProfessional(request, professional_id):
@@ -139,6 +161,7 @@ def connectProfessional(request, professional_id):
     if patient.professional is not None:
         # Si ya tiene un Professional asignado, redirige a la página anterior
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    
 
     # Verifica que el Professional con el ID proporcionado exista
     professional = get_object_or_404(Professional, pk=professional_id)
@@ -147,7 +170,7 @@ def connectProfessional(request, professional_id):
     patient.professional = professional
     patient.save()
 
-    # Redirige al usuario a la página anterior
+    messages.success(request, 'Conexión con el profesional realizada con éxito.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
@@ -157,4 +180,54 @@ def disconnectProfessional(request):
     patient.professional = None
     patient.save()
 
+    messages.success(request, 'Desconexión del profesional realizada con éxito.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+#sesiones
+@login_required
+def create_session(request):
+    professional = Professional.objects.get(user=request.user)  # Asumiendo que cada User tiene un Professional asociado
+    if request.method == 'POST':
+        form = SessionForm(request.POST, professional=professional)
+        if form.is_valid():
+            session = form.save(commit=False)
+            session.professional = professional
+            session.save()
+            return redirect('core:session_list')
+    else:
+        form = SessionForm(professional=professional)
+    return render(request, 'professional/session_form.html', {'form': form})
+
+@login_required
+def session_list(request):
+    professional = Professional.objects.get(user=request.user)
+    sessions = Session.objects.filter(professional=professional)
+    return render(request, 'professional/session_list.html', {'sessions': sessions})
+
+@login_required
+def delete_session(request, pk):
+    session = get_object_or_404(Session, pk=pk)
+    # Asegurar que el paciente asociado a la sesión esté bajo el cuidado del profesional actual
+    if session.patient.professional.user != request.user:
+        return redirect('core:session_list')  # O puedes mostrar un mensaje de error
+    
+    if request.method == 'POST':
+        session.delete()
+        return redirect('core:session_list')  # Redirigir a la lista de sesiones tras eliminar
+    return render(request, 'professional/session_confirm_delete.html', {'session': session})
+
+@login_required
+def edit_session(request, pk):
+    session = get_object_or_404(Session, pk=pk)
+    # Verificar que el paciente de la sesión esté bajo el profesional del usuario actual
+    if session.patient.professional.user != request.user:
+        return redirect('core:session_list')  # O puedes mostrar un mensaje de error
+
+    if request.method == 'POST':
+        form = SessionForm(request.POST, instance=session)
+        if form.is_valid():
+            form.save()
+            return redirect('core:session_list')
+    else:
+        form = SessionForm(instance=session)
+    return render(request, 'professional/session_form.html', {'form': form})

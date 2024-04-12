@@ -2,8 +2,8 @@
     <ul class="nav">
       <li class="nav-item {% if request.resolver_match.url_name == 'profesional_home' %}active{% endif %}" >
         <a class="nav-link" href="{% url 'core:professional_home' %}">
-          <i class=" menu-icon"></i>
-          <span class="menu-title">Inicio profesionales</span>
+          <i class="fa-solid fa-house-medical-circle-check menu-icon"></i>
+          <span class="menu-title">Inicio</span>
         </a>
       </li>
 
@@ -15,13 +15,20 @@
 </li>
 
 
-      <li class="nav-item "" >
+      
+      <li class="nav-item {% if request.resolver_match.url_name == 'professional_patients' %}active{% endif %}" >
         <a class="nav-link" href="{% url 'core:professional_patients' %}">
           <i class="fa-solid fa-user-group menu-icon"></i>
           <span class="menu-title">Pacientes</span>
         </a>
       </li>
 
+      <li class="nav-item {% if request.resolver_match.url_name == 'session_list' %}active{% endif %}" >
+        <a class="nav-link" href="{% url 'core:session_list' %}">
+         <i class="fa-regular fa-file-lines menu-icon"></i>
+          <span class="menu-title">Sesiones</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a
           class="nav-link"

@@ -14,15 +14,6 @@
       <form action="/signin/" method="POST" class="sign-in-form">
         <h2 class="title">Iniciar sesión</h2>
         {% csrf_token %}
-
-        {% if form.non_field_errors %}
-  <div class="error-messages">
-    {% for error in form.non_field_errors %}
-      <p class="error">{{ error }}</p>
-    {% endfor %}
-  </div>
-{% endif %}
-
         <!-- Campo de Usuario -->
         <div class="input-field">
           <i class="fas fa-user"></i>
@@ -54,7 +45,10 @@
             <span class="error">{{ error }}</span>
           {% endfor %}
         </div>
-
+ <!-- Enlace para restablecer la contraseña -->
+        <p class="password-reset">
+          ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer contraseña</a>
+        </p>
         <input type="submit" value="Login" class="btn solid" />
         <div class="signup-link">
           No tienes una cuenta? <a href="{% url 'signup' %}">Registrarse</a>

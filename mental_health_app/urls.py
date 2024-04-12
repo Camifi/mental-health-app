@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.urls import include, path
 from users import views as user_views
+from django.contrib.auth import views as auth_views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,4 +15,6 @@ urlpatterns = [
     path('profile/professional/update/', user_views.complete_professional_profile, name='complete_professional_profile'),
     path('delete_account/', user_views.UserDeleteView.as_view(), name='delete_account'),    
     path('', include(('core.urls', 'core'), namespace='core')),  # Incluye las URLs de 'core' con espacio de nombres
+    path('password_reset/',auth_views.PasswordResetView.as_view(),name='password_reset'),
+    path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done')
 ]

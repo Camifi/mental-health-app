@@ -241,7 +241,7 @@ profesional details */
     font-size: 12px;
 }
 .connect-btn{
-  background: transparent;
+  background: #fff;
   text-decoration: none;
   text-align: center;
   width: 100%;
@@ -252,9 +252,14 @@ profesional details */
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
-  color: #fff;
+  color: #717BBC;
   transition: all 0.3s linear;
   margin-top: 20px;
+}
+
+.connect-btn:hover{
+ background: #2F2E41;
+
 }
 /*****about section ****/
 .about {
@@ -423,4 +428,87 @@ font-size: 14px;
     color: #fff; /* Cambia a tu color preferido */
     font-size: 22px; /* Cambia al tamaño que desees */
     text-decoration: none; /* Elimina cualquier subrayado del enlace */
+}
+
+
+        /* Agrega estilos personalizados aquí */
+        .formulario-sesion {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .campo-formulario {
+            margin-bottom: 10px;
+        }
+        .etiqueta-campo {
+            font-weight: bold;
+        }
+        .boton-guardar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .boton-guardar:hover {
+            background-color: #45a049;
+        }
+   
+
+/* Sesiones */
+
+.btn-create {
+background-color: #717BBC;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 40px 0px 40px 0px;
+
+}
+div.table-responsive > div.dataTables_wrapper > div.row{
+margin-top: 40px;
+
+
+}
+
+h2.title {
+
+  color: #717BBC;
+  margin: 40px 0px 40px 0px;
+}
+
+div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:first-child{
+
+padding-right: 50px;
+  padding-top: 20px;
+}
+
+.session-list {
+  list-style: none;
+  padding: 0;
+}
+
+.session {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.session-date {
+  font-weight: bold;
+}
+
+.session-objectives {
+  margin-top: 5px;
+}
+
+.session-difficulties {
+  margin-top: 5px;
+  color: red; /* Cambia el color del texto según tus preferencias */
 }

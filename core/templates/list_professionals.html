@@ -1,16 +1,6 @@
 {% extends 'patient/base.html' %} 
 {% load static %} {% block content %}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Profile Cards | CodingLab</title>
-  <link rel="stylesheet" href="{% static 'css/profesional.css' %}">
-  
-</head>
-<body>
-  
+
   <div class="container">
     {% for professional in professionals %}
     <div class="box">
@@ -18,13 +8,7 @@
         <img src="{{ professional.profile_image.url }}" alt="Profile Image">
       </div>
        <div class="name_job">{{ professional.user.full_name }}</div>
-          <div class="rating">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-        </div>
+          
         <p> {{ professional.specialization  }}</p>
        
        <div class="btns">
@@ -37,5 +21,5 @@
   </div>
 
    {% endblock %}
-</body>
+
 </html>

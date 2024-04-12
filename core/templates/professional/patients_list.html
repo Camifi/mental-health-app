@@ -1,20 +1,42 @@
 {% extends "professional/base.html" %} 
 {% load static %} 
 {% block content %}
-<div>
-     {% if patients %}
-        <h2>Mis Pacientes</h2>
-        <ul class="list-group">
-            {% for patient in patients %}
-                <li class="list-group-item">
-                    {{ patient.user.full_name }} - {{ patient.therapy_goals }}
-                    <!-- Puedes agregar más atributos del paciente aquí -->
-                    <a href="{% url 'core:professional_patient_detail' id=patient.id %}" class="btn btn-primary">Ver más</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No tienes pacientes asignados aún.</p>
-    {% endif %}
+<div class="col-lg-6 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Lista de Pacientes</h4>
+            <p class="card-description">
+                Pacientes asignados
+            </p>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Objetivos de Terapia</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if patients %}
+                            {% for patient in patients %}
+                            <tr>
+                                <td>{{ patient.user.full_name }}</td>
+                                <td>{{ patient.therapy_goals }}</td>
+                                <td>
+                                    <a href="{% url 'core:professional_patient_detail' id=patient.id %}" class="btn btn-primary">Ver más</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3">No tienes pacientes asignados aún.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -39,5 +39,47 @@
             <!-- Añade más filas según sea necesario para otros atributos -->
         </tbody>
     </table>
+    <!-- <h2>Crear Sesión</h2>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message.text }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form method="post" class="formulario-sesion">
+        {% csrf_token %}
+       
+         <label for="{{ form.session_date.id_for_label }}" class="etiqueta-campo">Fecha de sesión:</label><br>
+            {{ form.session_date }}
+        <div class="campo-formulario">
+            <label for="id_objectives" class="etiqueta-campo">Objetivos trabajados:</label><br>
+            {{ form.objectives }}
+        </div>
+        <div class="campo-formulario">
+            <label for="id_difficulties" class="etiqueta-campo">Dificultades:</label><br>
+            {{ form.difficulties }}
+        </div>
+        <button type="submit" class="boton-guardar">Guardar</button>
+    </form> -->
+
+    <section style="margin-top: 80px">
+        <h2>Sesiones del Paciente</h2>
+        <a href="{% url 'core:create_session' %}" class="btn-create">Crear nueva sesión</a>
+        <div class="session-list">
+        {% for session in sessions %}
+        <div class="session">
+            <div class="session-date">Fecha de la sesión: {{ session.session_date }}</div>
+            <div class="session-objectives">Objetivo de la sesión: {{ session.objectives }}</div>
+            {% if session.difficulties %}
+            <div class="session-difficulties">Dificultades: {{ session.difficulties }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="session">
+            {{ recommendation|linebreaksbr }}
+        </div>
+        </div>
+    </section>
 </div>
 {% endblock %}

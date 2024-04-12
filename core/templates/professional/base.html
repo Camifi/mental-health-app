@@ -7,6 +7,8 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+   
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -20,8 +22,9 @@
       rel="stylesheet"
       href="{% static 'vendors/css/vendor.bundle.base.css' %}"
     />
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
+      <link rel="stylesheet" href="{% static 'css/profesional.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  
     <link
       rel="stylesheet"
       href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}"
@@ -54,8 +57,7 @@
     </div>
   </body>
 
-    <!-- Carga de archivos JS base del vendor -->
-    <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+  
 
     <!-- Plugins JS para esta página -->
     <script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
@@ -68,9 +70,11 @@
     <script src="{% static 'js/template.js' %}"></script>
     <script src="{% static 'js/settings.js' %}"></script>
     <script src="{% static 'js/todolist.js' %}"></script>
+   
 
     <!-- JS personalizado para esta página -->
     <script src="{% static 'js/dashboard.js' %}"></script>
     <script src="{% static 'js/Chart.roundedBarCharts.js' %}"></script>
   </body>
 </html>
+

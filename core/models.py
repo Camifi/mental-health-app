@@ -58,7 +58,7 @@ class Professional(models.Model):
         # Asegúrate de que 'full_name' es el campo correcto en tu modelo de User.
         # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
         return self.user.full_name
-
+    
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile')
@@ -85,6 +85,19 @@ class Patient(models.Model):
         # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
         return self.user.full_name
 
+class Session(models.Model):
+    professional = models.ForeignKey(Professional, on_delete=models.CASCADE, related_name='sessions')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='sessions')
+    session_date = models.DateField(_("Fecha de la sesión"))
+    objectives = models.TextField(_("Objetivo trabajado"))
+    difficulties = models.TextField(_("Dificultades"), blank=True, null=True)
+
+    def __str__(self):
+      
+        patient_name = self.patient.user.username  
+        profesional_name = self.professional.user.full_name
+        return f"{self.session_date} - {patient_name} - {profesional_name}"
+
 
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
@@ -96,3 +109,4 @@ class Message(models.Model):
         ordering = ['-created_at']
         verbose_name = "Message"
         verbose_name_plural = "Messages"
+

@@ -1,0 +1,72 @@
+{% extends 'professional/base.html' %}
+<head>  
+<meta charset="UTF-8">  
+<title>{% block title %}{% endblock %}</title>
+{% load static %}  
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+
+
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+</head> 
+
+{% block content %}
+
+ <div class="table-responsive">
+    <h2 class="title">Listado de Sesiones</h2>
+    <a href="{% url 'core:create_session' %}" class="btn-create">Crear nueva sesión</a>
+<table id="sessionTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Paciente</th>
+            <th>Objetivos</th>
+            <th>Dificultades</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for session in sessions %}
+        <tr>
+            <td>{{ session.session_date }}</td>
+            <td>{{ session.patient.user.full_name }}</td>
+            <td>{{ session.objectives }}</td>
+            <td>{{ session.difficulties }}</td>
+             <td>
+        <a href="{% url 'core:edit_session' session.id %}">Editar</a>
+        <a href="{% url 'core:delete_session' session.id %}">Eliminar</a>
+    </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#sessionTable').DataTable({
+    language: {
+        "decimal": ",",
+        "thousands": ".",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "infoPostFix": "",
+        "lengthMenu": "Mostrar _MENU_ registros",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "No se encontraron resultados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Último",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    }
+});
+} );
+</script>
+
+{% endblock %}

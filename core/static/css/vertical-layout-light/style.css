@@ -17563,6 +17563,8 @@ input[type="button"].btn-block {
 
 .card-title {
   margin-bottom: 0.75rem;
+  font-size: 45px;
+  color: #7978e9;
 }
 
 .card-subtitle {

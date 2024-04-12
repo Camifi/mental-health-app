@@ -1,0 +1,13 @@
+{% extends 'professional/base.html' %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Eliminar Sesión</h2>
+    <p>¿Estás seguro de que deseas eliminar esta sesión?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'core:session_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
