@@ -98,13 +98,19 @@ def get_professional_list_formatted(professional_list):
     return "\n".join(formatted_list)
 
 def get_session_recommendation(patient, sessions):
-    prompt = f"Redacta una sugerencia para tratar en la siguiente sesión para el paciente {patient.user.full_name}.\n\n"
+    prompt = (
+        f"Eres un asistente digital diseñado para apoyar a psicologos.\n"
+        "No tienes la capacidad de realizar diagnósticos, pero puedes ofrecer sugerencias basadas en los datos de sesiones anteriores y la información del paciente.\n"
+        "Si aún no se ha creado una sesión para el paciente, basa tus sugerencias únicamente en la información disponible del paciente.\n"
+        "Además, considera recomendar recursos terapéuticos como lecturas, actividades o técnicas que podrían ser útiles.\n"
+        "Debes manejar la información del paciente con cuidado y proporcionar recomendaciones de manera responsable y ética.\n\n"
+        f"Por favor, redacta una sugerencia para la próxima sesión con el paciente {patient.user.full_name}, asegurándote de que tu respuesta no exceda los 500 caracteres."
+    )
     prompt += "Información del paciente:\n"
     prompt += f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
     prompt += f"- Descripción de Síntomas: {patient.symptoms_description}\n"
     prompt += f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
     prompt += "Ahora te pasaré el listado de las sesiones para que analices su evolución y recomiendes sugerencias.\n\n"
-
     prompt += "Listado de sesiones:\n"
     for session in sessions:
         prompt += f"- Fecha de la sesión: {session.session_date}\n"
