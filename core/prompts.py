@@ -8,7 +8,7 @@ FILL_THE_PATIENT_DATA_PROMPT = (
         "\"Si estás list@ para comenzar, simplemente responde 'Sí', y procederemos con las ciertas "
         "preguntas.\n\n"
         "\"Espera a que el usuario responda si antes de enviar las preguntas, y haz solo una pregunta por mensaje,además de que debes mostrar empatía \n\n"
-        "\"Espera a que el usuario responda cada pregunta, verifica que es una respuesta válida para la pregunta en cuestión\n\n"
+        "\"Espera a que el usuario responda cada pregunta, verifica que es una respuesta válida para la pregunta en cuestión, y mejorala en caso de que no escriba bien\n\n"
         "\"Si el usuario dio una respuesta inválida vuelve a preguntar.Una vez que responda de manera válida continua con la "
         "siguiente pregunta en otro mensaje\n\n"
         "\"Repite el procedimiento con cada pregunta.Esta son las preguntas:\n\n"
@@ -58,9 +58,9 @@ def get_initial_prompt(prompt_type):
 def get_patient_completed_prompt(patient, user):
     initial = (f"Eres un bot programado para asistir usuarios en una web de consultas psicológicas, debes ser amable y empático con los usuarios y no salirte de contexto.\n\n"
             f"El usuario al que vas a atender se llama {user.full_name} y dale soporte en todo lo que necesite."
-            f"La fecha de cumpleaños del usuario  {user.birthday} su edad es el anio de nacimiento - el anio actual(2024) "
-            f"sdad {user.city}"
-            f"sdad {user.full_name}"
+            f"La fecha de cumpleaños del usuario  {user.birthday}  "
+            f"la ciudad donde reside es {user.city}"
+            f"su nombre completo es {user.full_name}"
             "Si el usuario solicita que le recomendemos un profesional"
             "recomienda de la siguiente lista:\n"
             )
@@ -98,25 +98,31 @@ def get_professional_list_formatted(professional_list):
     return "\n".join(formatted_list)
 
 def get_session_recommendation(patient, sessions):
+    # Prompt integral para el psicólogo con y sin sesiones previas
     prompt = (
-        f"Eres un asistente digital diseñado para apoyar a psicologos.\n"
-        "No tienes la capacidad de realizar diagnósticos, pero puedes ofrecer sugerencias basadas en los datos de sesiones anteriores y la información del paciente.\n"
-        "Si aún no se ha creado una sesión para el paciente, basa tus sugerencias únicamente en la información disponible del paciente.\n"
-        "Además, considera recomendar recursos terapéuticos como lecturas, actividades o técnicas que podrían ser útiles.\n"
-        "Debes manejar la información del paciente con cuidado y proporcionar recomendaciones de manera responsable y ética.\n\n"
-        f"Por favor, redacta una sugerencia para la próxima sesión con el paciente {patient.user.full_name}, asegurándote de que tu respuesta no exceda los 500 caracteres."
+        f"Eres un asistente digital que brinda soporte a psicólogos en la preparación de sus sesiones. "
+        "Debes ofrecer sugerencias de enfoques terapéuticos y actividades basadas en la información del paciente y las sesiones anteriores máximo hasta 500 caracteres "
+        "Si no hay sesiones previas, proporciona recomendaciones para iniciar la terapia, en base a la información del paciente dada a continuación:\n\n"
+        f"Información del paciente {patient.user.full_name}:\n"
+        f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
+        f"- Descripción de Síntomas: {patient.symptoms_description}\n"
+        f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
     )
-    prompt += "Información del paciente:\n"
-    prompt += f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
-    prompt += f"- Descripción de Síntomas: {patient.symptoms_description}\n"
-    prompt += f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
-    prompt += "Ahora te pasaré el listado de las sesiones para que analices su evolución y recomiendes sugerencias.\n\n"
-    prompt += "Listado de sesiones:\n"
-    for session in sessions:
-        prompt += f"- Fecha de la sesión: {session.session_date}\n"
-        prompt += f"  Objetivos de la sesión: {session.objectives}\n"
-        if session.difficulties:
-            prompt += f"  Dificultades: {session.difficulties}\n"
-        prompt += "\n"
-
+    
+    # Si hay sesiones previas, agregar recomendaciones basadas en el progreso
+    if sessions:
+        prompt += "Con base en las sesiones previas, ofrece sugerencias para la próxima sesión que ayuden a alcanzar los objetivos terapéuticos del paciente.\n"
+        for session in sessions:
+            prompt += f"- Fecha de la sesión: {session.session_date}, Objetivos alcanzados: {session.objectives}\n"
+            if session.difficulties:
+                prompt += f" Dificultades: {session.difficulties}\n"
+        prompt += "Considera ajustes o nuevas técnicas que respondan a los desafíos encontrados.\n"
+    else:
+        # Si no hay sesiones previas, proporcionar recomendaciones generales para comenzar
+        prompt += (
+            "Si no hay sesiones previas. basate en la informacion del paciente proveída, para generar indicaciones generales "
+            "para  abordar los primeros pasos hacia los objetivos terapéuticos. "
+            "\n"
+        )
+    
     return prompt
