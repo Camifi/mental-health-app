@@ -56,8 +56,8 @@
         {% block content %}{% endblock %}
     </div>
   </body>
-
-  
+    <!-- Carga de archivos JS base del vendor -->
+    <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 
     <!-- Plugins JS para esta página -->
     <script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
@@ -70,7 +70,6 @@
     <script src="{% static 'js/template.js' %}"></script>
     <script src="{% static 'js/settings.js' %}"></script>
     <script src="{% static 'js/todolist.js' %}"></script>
-   
 
     <!-- JS personalizado para esta página -->
     <script src="{% static 'js/dashboard.js' %}"></script>

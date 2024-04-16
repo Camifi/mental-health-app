@@ -24,10 +24,7 @@
             id="id_{{ form.username.name }}"
             class="{% if form.username.errors %}invalid{% endif %}"
           />
-          <!-- Mostrar errores para 'username' -->
-          {% for error in form.username.errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
+          
         </div>
 
         <!-- Campo de Contraseña -->
@@ -40,23 +37,31 @@
             id="id_{{ form.password.name }}"
             class="{% if form.password.errors %}invalid{% endif %}"
           />
-          <!-- Mostrar errores para 'password' -->
-          {% for error in form.password.errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
+          
         </div>
- <!-- Enlace para restablecer la contraseña -->
-        <p class="password-reset">
-          ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer contraseña</a>
-        </p>
+
         <input type="submit" value="Login" class="btn solid" />
         <div class="signup-link">
           No tienes una cuenta? <a href="{% url 'signup' %}">Registrarse</a>
+           <!-- Enlace para restablecer la contraseña -->
+        <p class="password-reset">
+          ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer contraseña</a>
+        </p>
+        {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
         </div>
       </form>
     </div>
   </div>
 </form>
+
 
 <div class="panels-container">
   <div class="panel left-panel">

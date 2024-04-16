@@ -90,15 +90,15 @@ def clear_chat(request, user_id):
 
 # myTODO: vista chatbot profesional 
 def chatbot_profesional(request):
-    return render(request,'professional\chatbot.html')
+    return render(request,'professional/chatbot.html')
 
 def welcome_professional(request):
-    return render(request,'professional\home.html')
+    return render(request,'professional/home.html')
 
 @login_required
 def dashboard_patient(request):
     user = request.user
-    return render(request,'patient\home.html', {'user': user})
+    return render(request,'patient/home.html', {'user': user})
 
 @login_required
 def list_patients(request):
@@ -109,7 +109,7 @@ def list_patients(request):
         # Manejo del caso en que el usuario no tenga un perfil de profesional asociado
         patients = []
     
-    return render(request, 'professional\patients_list.html', {'patients': patients})
+    return render(request, 'professional/patients_list.html', {'patients': patients})
 
 @login_required
 def show_patient(request, id):
@@ -136,7 +136,7 @@ def show_patient(request, id):
     # Crear una cadena de texto con la información del paciente y sus sesiones
     prompt = get_session_recommendation(patient, sessions)
     recommendation = ask_openai([], prompt)
-    print(recommendation)
+    # print(recommendation)
 
     return render(request, 'professional/patient_detail.html', {
         'patient': patient,
@@ -201,8 +201,31 @@ def create_session(request):
 @login_required
 def session_list(request):
     professional = Professional.objects.get(user=request.user)
-    sessions = Session.objects.filter(professional=professional)
-    return render(request, 'professional/session_list.html', {'sessions': sessions})
+    queryset = Session.objects.filter(professional=professional)
+
+    # Filtros
+@login_required
+def session_list(request):
+    professional = request.user.professional_profile
+    queryset = Session.objects.filter(professional=professional).select_related('patient')
+
+    # Filtros
+    patient_id = request.GET.get('patient')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+
+    if patient_id:
+        queryset = queryset.filter(patient__id=patient_id)
+    if date_from:
+        queryset = queryset.filter(session_date__gte=date_from)
+    if date_to:
+        queryset = queryset.filter(session_date__lte=date_to)
+
+    return render(request, 'professional/session_list.html', {
+        'sessions': queryset,
+        'patients': professional.patients.all(),  # Suponiendo que la relación es patients en Professional
+    })
+
 
 @login_required
 def delete_session(request, pk):

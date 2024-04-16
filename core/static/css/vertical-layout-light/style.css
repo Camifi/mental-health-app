@@ -8755,6 +8755,10 @@ caption {
 th {
   text-align: inherit;
   text-align: -webkit-match-parent;
+  border-top: 0;
+  border-bottom-width: 1px;
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
 label {
@@ -21088,6 +21092,8 @@ button.bg-dark:focus,
 .mb-0,
 .my-0 {
   margin-bottom: 0 !important;
+  font-size: 17px;
+  line-height: 25px;
 }
 
 .ml-0,
@@ -23052,7 +23058,7 @@ button.bg-dark:focus,
 
 .font-weight-bold {
     font-family: "Poppins", sans-serif;
-  
+  color: #2F2E41;
   font-weight: 700 !important;
 }
 
@@ -24486,7 +24492,9 @@ code {
 }
 
 .fs-30 {
-  font-size: 30px;
+padding-top: 10px;
+  font-size: 20px;
+  line-height: 30px;
 }
 
 .chartjs-legend ul {
@@ -27032,16 +27040,17 @@ code {
 }
 
 .card.card-tale {
-  background: #7da0fa;
-  color: #ffffff;
+  background: #dae7ff;
+  color: #212529;
 }
 
 .card.card-tale:hover {
   background: #96b2fb;
+  color:#fff;
 }
 
 .card.card-dark-blue {
-  background: #4747a1;
+  background: #717BBC;
   color: #ffffff;
 }
 
@@ -27050,8 +27059,8 @@ code {
 }
 
 .card.card-light-blue {
-  background: #7978e9;
-  color: #ffffff;
+  background: #F2F4F7;
+  color: #212529;
 }
 
 .card.card-light-blue:hover {
@@ -27068,7 +27077,7 @@ code {
 }
 
 .card-inverse-primary {
-  background: rgba(75, 73, 172, 0.2);
+ 
   border: 1px solid #45439e;
   color: #393783;
 }
@@ -36198,7 +36207,7 @@ div.tagsinput span.tag a {
 }
 
 .content-wrapper {
-  background: #f5f7ff;
+  background: #fff;
   padding: 2.375rem 2.375rem;
   width: 100%;
   -webkit-flex-grow: 1;
@@ -36214,7 +36223,7 @@ div.tagsinput span.tag a {
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 60px);
-  background: #fff;
+  background: #2F2E41;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   padding: 0;
@@ -36441,7 +36450,7 @@ div.tagsinput span.tag a {
 }
 
 .sidebar-dark .sidebar .nav .nav-item .nav-link {
-  color: #ffffff;
+  color: #232227;
 }
 
 .sidebar-dark .sidebar .nav .nav-item .nav-link i {
@@ -36537,9 +36546,7 @@ div.tagsinput span.tag a {
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
   -ms-transition: background 0.25s ease;
-  -webkit-box-shadow: 0px 5px 21px -5px #cdd1e1;
-  -moz-box-shadow: 0px 5px 21px -5px #cdd1e1;
-  box-shadow: 0px 5px 21px -5px #cdd1e1;
+ 
   /* Navbar color variations */
 }
 
@@ -36548,7 +36555,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-brand-wrapper {
-  background: #ffffff;
+  background: #2F2E41;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
@@ -36580,9 +36587,10 @@ div.tagsinput span.tag a {
 
 .navbar .navbar-brand-wrapper .navbar-brand img {
   max-width: 100%;
-  height: 34px;
+  height: 55px;
   margin: auto;
   vertical-align: middle;
+
 }
 
 .navbar .navbar-brand-wrapper .brand-logo-mini {
@@ -48775,4 +48783,60 @@ div.tagsinput span.tag a {
   }
 }
 
-/*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */
+.image-card{
+  width: 180px;
+}
+.image-card-2{
+  width: 200px;
+}
+
+/* boton create */
+.card {
+  background-color: #fff; /* Color de fondo del card */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra del card */
+}
+
+.card-body {
+  padding: 20px; /* Espaciado interno del card */
+}
+
+.img-fluid {
+  max-width: 400px;
+  height: auto; /* Para mantener la proporción de la imagen */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .row.g-0 {
+    flex-direction: column;
+  }
+}
+
+.filters {
+  margin-bottom: 20px;
+}
+
+.filters form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filters label {
+  margin-right: 5px;
+}
+
+.filters select, .filters input[type="date"] {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+}
+
+.filters button {
+  padding: 5px 10px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

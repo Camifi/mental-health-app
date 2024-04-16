@@ -92,48 +92,20 @@ form.sign-in-form {
   outline: none;
   border: none;
   line-height: 1;
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 14px;
   color: #333;
 }
 
 .input-field input::placeholder {
-  color: #494949;
+  color: #333;
   font-weight: 400;
   font-size: 14px;
 }
 
-.social-text {
-  padding: 0.7rem 0;
-  font-size: 1rem;
-}
-
-.social-media {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  text-decoration: none;
-  color: #5f6368;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
-}
-
-.social-icon img {
-  margin-right: 8px;
-}
 
 .btn {
-  width: 150px;
+  width: 380px;
   background-color: #717bbc;
   border: none;
   outline: none;
@@ -409,15 +381,62 @@ form.sign-in-form {
   text-decoration: none; /* Opcional: elimina el subrayado del enlace */
 }
 
-/* Si deseas que el color cambie al pasar el mouse, puedes añadir: */
-.signup-link a:hover {
-  color: darkred; /* Cambia el color al pasar el mouse por encima */
-}
-.error {
-  color: red; /* Color rojo para mensajes de error */
-  font-size: 0.8em; /* Tamaño de fuente más pequeño */
+.messages {
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: red; /* Color de fondo para mensajes de error */
+  text-align: center;
 }
 
-.invalid {
-  border-color: red; /* Borde rojo para campos de entrada no válidos */
+.messages .error {
+  background-color: #f44336; /* Rojo oscuro para errores */
+}
+
+/* Puedes añadir más clases para diferentes tipos de mensajes si lo deseas */
+.messages .info {
+  background-color: #2196F3; /* Azul para información */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Media query para pantallas mayores de 600px (escritorio) */
+@media (min-width: 601px) {
+  .user-details {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .input-field {
+    width: calc(50% - 20px); /* Ajusta el ancho de cada input, restando el margen */
+    margin: 10px; /* Espacio entre los inputs */
+  }
+}
+
+/* Media query para pantallas de hasta 600px (dispositivos móviles) */
+@media (max-width: 600px) {
+  .user-details {
+    flex-direction: column;
+  }
+
+  .input-field {
+    width: 100%; /* Cada input ocupa todo el ancho disponible */
+    margin: 10px 0; /* Solo margen vertical */
+  }
+}
+
+/* Ajustes adicionales para alinear los íconos y textos dentro de los input-field */
+.input-field i {
+  margin-right: 10px; /* Espacio entre el icono y el input */
+}
+
+.input-field input {
+  width: 100%; /* Asegura que el input ocupa todo el espacio restante */
 }

@@ -19,31 +19,32 @@ def signout(request):
     return redirect('home')
 
 def homepage(request):
+    if request.user.is_authenticated:
+        # Supongamos que tienes un campo `user_type` en tu modelo User
+        user_type = getattr(request.user, 'user_type', None)
+        if user_type == 'P':
+            return redirect('core:patient_home')  # Redirige al dashboard del paciente
+        elif user_type == 'PR':
+            return redirect('core:professional_home')  # Redirige al dashboard del profesional
+        # Añade más condiciones según sea necesario
+
     return render(request,'home.html')
 
 @login_required
 def select_user_type(request):
-    # Verificar si el usuario ya tiene un tipo de usuario establecido
     if getattr(request.user, 'user_type', None):
-        message = "Ya has seleccionado tu tipo de usuario."
-        messages.add_message(request, messages.INFO, message)
-        return redirect('home')  # O la página de inicio adecuada según el tipo de usuario
+        return redirect('home')  # Aquí deberías tener una lógica para redirigir según el tipo de usuario
 
     if request.method == "POST":
         user_type = request.POST.get('user_type')
         request.user.user_type = user_type
         request.user.save()
 
-        # Si el usuario es un paciente, redirige para completar su información común
-        if user_type == User.UserTypeChoices.PATIENT:
-            return redirect('complete_user_common_info')
-        # Si el usuario es un profesional, redirige para completar su información común
-        # y luego su información profesional
-        elif user_type == User.UserTypeChoices.PROFESSIONAL:
-            # Aquí puedes guardar alguna información en la sesión para saber después de completar
-            # la info común, redirigir al usuario para que complete la info profesional.
+        if user_type == 'P':
+            return redirect('complete_user_common_info')  # Asegúrate de que esta vista gestione el redireccionamiento a `core:patient_home`
+        elif user_type == 'PR':
             request.session['complete_professional_profile'] = True
-            return redirect('complete_user_common_info')
+            return redirect('complete_user_common_info')  # Asegúrate de que esta vista gestione el redireccionamiento a `core:professional_home`
 
     return render(request, 'registration/select_user_type.html')
 
@@ -53,23 +54,21 @@ def signin(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            user_type = getattr(user, 'user_type', None)
 
-            # Verifica el tipo de usuario para redirigirlo correctamente
-            user_type = getattr(user, 'user_type', None)  # Obtiene user_type o None si no existe
-            if user_type == 'P':  # Si el usuario es un paciente
-                return redirect('core:patient_home')  # Redirige a la página de bienvenida para pacientes
-            elif user_type == 'PR':  # Si el usuario es un profesional
-                return redirect('core:professional_home')  # Redirige al dashboard de profesionales
+            if user_type == 'P':
+                return redirect('core:patient_home')
+            elif user_type == 'PR':
+                return redirect('core:professional_home')
             else:
-                # Si user_type no está definido, redirige a una página de selección de tipo de usuario o manejo de error
                 return redirect('select_user_type')
         else:
-            # En caso de formulario no válido
             messages.error(request, 'Usuario y/o contraseña incorrectos.')
             return redirect('signin')
     else:
         form = AuthenticationForm()
-    return render(request, 'registration/signin.html', {"form": form})
+    return render(request, 'registration/signin.html', {'form': form})
+
 
 
 @login_required(login_url="signin")

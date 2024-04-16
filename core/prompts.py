@@ -100,7 +100,7 @@ def get_professional_list_formatted(professional_list):
 def get_session_recommendation(patient, sessions):
     # Prompt integral para el psicólogo con y sin sesiones previas
     prompt = (
-        f"Eres un asistente digital que brinda soporte a psicólogos en la preparación de sus sesiones. "
+        f"Eres un asistente virtual que brinda soporte a psicólogos en la preparación de sus sesiones. "
         "Debes ofrecer sugerencias de enfoques terapéuticos y actividades basadas en la información del paciente y las sesiones anteriores máximo hasta 500 caracteres "
         "Si no hay sesiones previas, proporciona recomendaciones para iniciar la terapia, en base a la información del paciente dada a continuación:\n\n"
         f"Información del paciente {patient.user.full_name}:\n"
@@ -118,11 +118,16 @@ def get_session_recommendation(patient, sessions):
                 prompt += f" Dificultades: {session.difficulties}\n"
         prompt += "Considera ajustes o nuevas técnicas que respondan a los desafíos encontrados.\n"
     else:
-        # Si no hay sesiones previas, proporcionar recomendaciones generales para comenzar
         prompt += (
-            "Si no hay sesiones previas. basate en la informacion del paciente proveída, para generar indicaciones generales "
-            "para  abordar los primeros pasos hacia los objetivos terapéuticos. "
-            "\n"
-        )
+    "Si esta es la primera vez que se encuentra con el paciente y no tiene "
+    "sesiones anteriores de referencia, utiliza la información proporcionada por el paciente para "
+    "preparar recomendaciones generales. En esta etapa inicial, es importante evitar realizar "
+    "cualquier diagnóstico. En su lugar, centra tu atención en comprender las necesidades y "
+    "expectativas del paciente"
+    "\n"
+    "Consideraciones para la primera sesión pueden incluir: establecer un ambiente de confianza, "
+    "explorar los motivos de consulta del paciente, y discutir el formato y los objetivos generales "
+    "de las sesiones futuras. Mantener la recomendación a no más de 400 caracteres"
+)
     
     return prompt

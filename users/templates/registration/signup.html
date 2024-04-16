@@ -1,10 +1,7 @@
 {% load static %} {% block head %}
 
 <link href="{% static 'css/signup-signin.css' %}" rel="stylesheet" />
-<script
-  src="https://kit.fontawesome.com/64d58efce2.js"
-  crossorigin="anonymous"
-></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
 {% endblock %} {% block content %}
 
@@ -15,14 +12,14 @@
       <form action="{% url 'signup' %}" method="POST" class="sign-up-form">
         <h2 class="title">Crear cuenta</h2>
         {% csrf_token %}
-
+        <div class="user-details">
         <!-- Campo de Nombre Completo -->
         <div class="input-field">
           <i class="fas fa-user"></i>
           <input
             type="text"
             name="{{ form.full_name.name }}"
-            placeholder="{{ form.full_name.label }}"
+            placeholder="Nombre y Apellido"
             id="id_{{ form.full_name.name }}"
             required
           />
@@ -34,7 +31,7 @@
           <input
             type="text"
             name="{{ form.phone_number.name }}"
-            placeholder="{{ form.phone_number.label }}"
+            placeholder="Celular"
             id="id_{{ form.phone_number.name }}"
             required
           />
@@ -46,7 +43,7 @@
           <input
             type="email"
             name="{{ form.email.name }}"
-            placeholder="{{ form.email.label }}"
+            placeholder="Correo Electrónico"
             id="id_{{ form.email.name }}"
             required
           />
@@ -76,9 +73,9 @@
           />
         </div>
 
-        <!-- Campo de Confirmar Contraseña -->
+  
         <div class="input-field">
-          <i class="fas fa-lock"></i>
+          <i class="fa-solid fa-unlock"></i>
           <input
             type="password"
             name="password2"
@@ -87,6 +84,7 @@
             required
           />
         </div>
+      </div>
 
         <input type="submit" value="Registrar" class="btn solid" />
 
