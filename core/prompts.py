@@ -59,7 +59,7 @@ def get_patient_completed_prompt(patient, user):
     initial = (f"Eres un bot programado para asistir usuarios en una web de consultas psicológicas, debes ser amable y empático con los usuarios y no salirte de contexto.\n\n"
             f"El usuario al que vas a atender se llama {user.full_name} y dale soporte en todo lo que necesite."
             f"La fecha de cumpleaños del usuario  {user.birthday}  "
-            f"la ciudad donde reside es {user.city}"
+            
             f"su nombre completo es {user.full_name}"
             "Si el usuario solicita que le recomendemos un profesional"
             "recomienda de la siguiente lista:\n"
@@ -98,10 +98,10 @@ def get_professional_list_formatted(professional_list):
     return "\n".join(formatted_list)
 
 def get_session_recommendation(patient, sessions):
-    # Prompt integral para el psicólogo con y sin sesiones previas
+ 
     prompt = (
         f"Eres un asistente virtual que brinda soporte a psicólogos en la preparación de sus sesiones. "
-        "Debes ofrecer sugerencias de enfoques terapéuticos y actividades basadas en la información del paciente y las sesiones anteriores máximo hasta 500 caracteres "
+        "Debes ofrecer sugerencias de enfoques terapéuticos y actividades basadas en la información del paciente y las sesiones anteriores máximo hasta 400 caracteres "
         "Si no hay sesiones previas, proporciona recomendaciones para iniciar la terapia, en base a la información del paciente dada a continuación:\n\n"
         f"Información del paciente {patient.user.full_name}:\n"
         f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
@@ -109,25 +109,31 @@ def get_session_recommendation(patient, sessions):
         f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
     )
     
-    # Si hay sesiones previas, agregar recomendaciones basadas en el progreso
-    if sessions:
-        prompt += "Con base en las sesiones previas, ofrece sugerencias para la próxima sesión que ayuden a alcanzar los objetivos terapéuticos del paciente.\n"
-        for session in sessions:
-            prompt += f"- Fecha de la sesión: {session.session_date}, Objetivos alcanzados: {session.objectives}\n"
-            if session.difficulties:
-                prompt += f" Dificultades: {session.difficulties}\n"
-        prompt += "Considera ajustes o nuevas técnicas que respondan a los desafíos encontrados.\n"
-    else:
-        prompt += (
-    "Si esta es la primera vez que se encuentra con el paciente y no tiene "
-    "sesiones anteriores de referencia, utiliza la información proporcionada por el paciente para "
-    "preparar recomendaciones generales. En esta etapa inicial, es importante evitar realizar "
-    "cualquier diagnóstico. En su lugar, centra tu atención en comprender las necesidades y "
-    "expectativas del paciente"
-    "\n"
-    "Consideraciones para la primera sesión pueden incluir: establecer un ambiente de confianza, "
-    "explorar los motivos de consulta del paciente, y discutir el formato y los objetivos generales "
-    "de las sesiones futuras. Mantener la recomendación a no más de 400 caracteres"
+    prompt = (
+    f"Eres un asistente virtual que apoya a psicólogos en la preparación de sus sesiones. "
+    "Tu tarea es sugerir enfoques terapéuticos y actividades según la información del paciente y las sesiones previas, "
+    "con un límite de 350 caracteres por sugerencia. No debes realizar diagnósticos, pero sí puedes recomendar recursos como PDFs, vídeos y libros. "
+    f"\n\nInformación del paciente {patient.user.full_name}:\n"
+    f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
+    f"- Descripción de síntomas: {patient.symptoms_description}\n"
+    f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
 )
-    
+
+# Si hay sesiones previas, agregar recomendaciones basadas en el progreso
+    if sessions:
+        prompt += (
+        "Basado en las sesiones anteriores, aquí algunas sugerencias para la próxima sesión:\n\n"
+    )
+    for session in sessions:
+        prompt += f"- Sesión del {session.session_date}: Objetivos alcanzados: {session.objectives}\n"
+        if session.difficulties:
+            prompt += f"Dificultades: {session.difficulties}\n"
+        prompt += "Considera técnicas ajustadas a los desafíos encontrados.\n"
+    else:
+         prompt += (
+        "Para la primera sesión con este paciente, considera las siguientes recomendaciones iniciales: "
+        "Establecer un ambiente de confianza, explorar a profundidad los motivos de la consulta y los síntomas descritos, "
+        "y dialogar sobre los objetivos y expectativas de la terapia."
+    )
+
     return prompt

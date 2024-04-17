@@ -10452,13 +10452,13 @@ pre code {
     border: 0;
   }
 }
-
+@media(min-width:1200px){
 .table-responsive {
   display: block;
-  width: 100%;
+  width: 1140px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-}
+}}
 
 .table-responsive > .table-bordered {
   border: 0;
@@ -26956,6 +26956,7 @@ padding-top: 10px;
 
 .card .card-body {
   padding: 1.25rem 1.25rem;
+  min-height: 350px;
 }
 
 .card .card-body + .card-body {
@@ -33080,7 +33081,7 @@ body.avgrund-active {
 }
 
 .expandable-table thead tr th {
-  background: #4b49ac;
+  background: #717BBC;
   padding: 10px;
   color: #ffffff;
   font-size: 14px;
@@ -48824,17 +48825,19 @@ div.tagsinput span.tag a {
 
 .filters label {
   margin-right: 5px;
+  font-size: 14px;
 }
 
 .filters select, .filters input[type="date"] {
   padding: 5px;
   border-radius: 4px;
-  border: 1px solid #ced4da;
+  border: 1px solid #3333;
+  font-size: 14px;
 }
 
 .filters button {
   padding: 5px 10px;
-  background-color: #000;
+  background-color: #717BBC;
   color: white;
   border: none;
   border-radius: 4px;

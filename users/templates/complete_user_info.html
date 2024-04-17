@@ -1,15 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Completa tu Información</title>
-  </head>
-  <body>
-    <h2>Completa tu Información Básica</h2>
+{% extends 'base.html' %}
+{% load static %}
 
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Siguiente</button>
-    </form>
-  </body>
-</html>
+{% block content %}
+ <div class="main-panel">        
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {% if is_editing %}
+                                    Editar tu Información Básica
+                                {% else %}
+                                    Completa tu Información Básica
+                                {% endif %}
+                            </h4>
+                            <p class="card-description">
+                                Por favor, {% if is_editing %}actualiza{% else %}llena{% endif %} los siguientes campos:
+                            </p>
+                            <form class="forms-sample" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="{{ form.gender.id_for_label }}">Género</label>
+                                    <select class="form-control" id="{{ form.gender.id_for_label }}" name="{{ form.gender.html_name }}">
+                                        {% for key, value in form.gender.field.choices %}
+                                            <option value="{{ key }}" {% if form.gender.value|stringformat:"s" == key %}selected{% endif %}>{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.city.id_for_label }}">Ciudad</label>
+                                    <input type="text" class="form-control" id="{{ form.city.id_for_label }}" name="{{ form.city.html_name }}" placeholder="Ciudad" value="{{ form.city.value }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.birthday.id_for_label }}">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.birthday.value }}">
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2">
+                                    {% if is_editing %}
+                                        Actualizar
+                                    {% else %}
+                                        Guardar
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

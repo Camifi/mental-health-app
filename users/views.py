@@ -79,37 +79,48 @@ def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()  # El formulario se encarga de crear el usuario
+            email = form.cleaned_data.get('email')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'Un usuario con ese correo electrónico ya existe.')
+                return render(request, 'registration/signup.html', {'form': form})
+            user = form.save()
             login(request, user)
             return redirect('select_user_type')
         else:
-            # Si el formulario no es válido, volvemos a mostrar el formulario con errores
-            return render(request, 'registration/signup.html', {"form": form})
+            return render(request, 'registration/signup.html', {'form': form})
     else:
         form = CustomUserCreationForm()
-        return render(request, 'registration/signup.html', {"form": form})
-
+        return render(request, 'registration/signup.html', {'form': form})
     
 #selecciona el tipo de usuario y almacena en su tabla correspondiente
 @login_required(login_url="signin")
 def complete_user_common_info(request):
-    if request.method == "POST":
-        # Aquí asumes que tienes un formulario para la información común
-        form = UserCommonInfoForm(request.POST)
-        if form.is_valid():
-            user_common_info = form.save(commit=False)
-            user_common_info.user = request.user
-            user_common_info.save()
-
-            # Comprobar el tipo de usuario y redirigir adecuadamente
-            if request.user.user_type == "PR":  # Profesional
-                return redirect('complete_professional_profile')
-            else:  # Paciente
-                return redirect('core:profesional_home')
-    else:
-        form = UserCommonInfoForm()
+    is_editing = request.user.is_completed if hasattr(request.user, 'is_completed') else False
     
-    return render(request, 'complete_user_info.html', {'form': form})
+    if request.method == "POST":
+        form = UserCommonInfoForm(request.POST, instance=request.user)  # Pasamos la instancia del usuario actual
+        if form.is_valid():
+            form.save()
+            if not is_editing:
+                request.user.is_completed = True  # Marcar como completado si es la primera vez
+                request.user.save()
+            messages.success(request, 'Tu información ha sido actualizada exitosamente.')
+
+            # Redirigir según el tipo de usuario
+            if request.user.user_type == "PR":
+                return redirect('core:professional_home')
+            else:
+                return redirect('core:patient_home')
+        else:
+            messages.error(request, "Por favor corrige los errores en el formulario.")
+    else:
+        form = UserCommonInfoForm(instance=request.user)  # Inicializa el formulario con los datos del usuario
+
+    context = {
+        'form': form,
+        'is_editing': is_editing
+    }
+    return render(request, 'complete_user_info.html', context)
 
 
 @login_required(login_url="signin")

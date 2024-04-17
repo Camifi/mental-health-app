@@ -1,26 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Información Profesional</title>
-  </head>
-  <body>
-    <h2>Configura Tu Perfil Profesional</h2>
-    <h3>
-      Proporciona detalles para que los pacientes te conozcan mejor y puedan
-      elegirte con confianza
-    </h3>
-    <p>
-      La información detallada permite a los pacientes encontrar el especialista
-      adecuado y asegura la mejor correspondencia
-    </p>
+{% extends 'base.html' %}
+{% load static %}
 
-     <!-- Asegúrate de incluir enctype="multipart/form-data" para la carga de archivos -->
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Enviar</button>
-    </form>
-    </form>
-  </body>
-</html>
+{% block content %}
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Configura Tu Perfil Profesional</h4>
+            <p class="card-description">
+                Proporciona detalles para que los pacientes te conozcan mejor y puedan elegirte con confianza
+            </p>
+            <p>
+                La información detallada permite a los pacientes encontrar el especialista adecuado y asegura la mejor correspondencia
+            </p>
+            <form method="post" enctype="multipart/form-data" class="forms-sample">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-group row">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary mr-2">Guardar</button>
+                       
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
