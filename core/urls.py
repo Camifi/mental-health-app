@@ -19,13 +19,12 @@ urlpatterns = [
     path('professional/chatbot/',views.chatbot_profesional, name='chatbot-professional'),
     path('professional/patients/', views.list_patients, name='professional_patients'),
     path('professional/patients/<int:id>/', views.show_patient, name='professional_patient_detail'),
-  
+    path('professional/patients/<int:id>/report/', views.generate_report, name="patient_report"),
+
     path('sessions/', views.session_list, name='session_list'),
     path('sessions/create/', views.create_session, name='create_session'),
     path('sessions/edit/<int:pk>/', views.edit_session, name='edit_session'),  # Editar una sesión existente
-    path('sessions/delete/<int:pk>/', views.delete_session, name='delete_session') 
-
-   
+    path('sessions/delete/<int:pk>/', views.delete_session, name='delete_session'),
 ] 
 
 if settings.DEBUG:

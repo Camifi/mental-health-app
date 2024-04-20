@@ -1,13 +1,15 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Message, Patient, Professional, Session
 from .helpers import ask_openai, create_patient
-from django.http import JsonResponse, Http404, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from .models import Message, Patient 
-from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation
+from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation, get_session_custom_request, get_session_csv_report
 from django.contrib.auth.decorators import login_required
-from .forms import SessionForm, PatientSessionForm
+from .forms import SessionForm
 from django.contrib import messages
+import csv
+import io
 
 def chatbot(request):
     if request.method == 'POST':
@@ -117,32 +119,19 @@ def show_patient(request, id):
     patient = get_object_or_404(Patient, id=id, professional=professional)
     sessions = Session.objects.filter(patient=patient, professional=professional)
 
-    # if request.method == 'POST':
-    #     print("RECIBIENDO DATOS")
-    #     form = PatientSessionForm(request.POST, professional=professional)
-    #     if form.is_valid():
-    #         session = form.save(commit=False)
-    #         session.professional = professional
-    #         session.patient = patient
-    #         print("FORM VALIDO")
-    #         print(session)
-    #         session.save()
-    #         messages.success(request, 'La sesión ha sido guardada con éxito.')
-    #         return redirect('core:professional_patient_detail', id=patient.id) 
-    #     else:
-    #         messages.error(request, 'Hubo un error al guardar la sesión. Por favor, revise los datos ingresados.')
-    # else:
-    #     form = PatientSessionForm()
-    # Crear una cadena de texto con la información del paciente y sus sesiones
-    prompt = get_session_recommendation(patient, sessions)
+    custom_prompt = request.GET.get("custom-prompt")
+    if custom_prompt:
+        prompt = get_session_custom_request(patient, sessions, custom_prompt)
+    else:
+        prompt = get_session_recommendation(patient, sessions)
+
+    print(prompt)
     recommendation = ask_openai([], prompt)
-    # print(recommendation)
 
     return render(request, 'professional/patient_detail.html', {
         'patient': patient,
-        # 'form': form
         'sessions': sessions,
-        'recommendation': recommendation
+        'recommendation': recommendation,
     })
 
 @login_required
@@ -254,3 +243,29 @@ def edit_session(request, pk):
     else:
         form = SessionForm(instance=session)
     return render(request, 'professional/session_form.html', {'form': form})
+
+@login_required
+def generate_report(request, id):
+    professional = get_object_or_404(Professional, user=request.user)
+    patient = get_object_or_404(Patient, id=id, professional=professional)
+    sessions = Session.objects.filter(patient=patient, professional=professional)
+
+    prompt = get_session_csv_report(patient, sessions)
+
+    # Obtener la respuesta de GPT
+    report_text = ask_openai([], prompt)
+
+    # Crear un archivo CSV en memoria
+    report_csv = io.StringIO()
+    csv_writer = csv.writer(report_csv)
+
+    # Convertir la respuesta de texto plano en filas de CSV
+    csv_reader = csv.reader(report_text.splitlines())
+    for row in csv_reader:
+        csv_writer.writerow(row)
+
+    # Configurar la respuesta HTTP con el contenido del archivo CSV en memoria
+    response = HttpResponse(report_csv.getvalue(), content_type='text/csv')
+    response['Content-Disposition'] = f"attachment; filename=\"reporte-{patient.user.username}.csv\""
+
+    return response
