@@ -4,9 +4,9 @@ from .helpers import ask_openai, create_patient
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
 from .models import Message, Patient 
-from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation
+from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation, get_session_custom_request
 from django.contrib.auth.decorators import login_required
-from .forms import SessionForm, PatientSessionForm
+from .forms import SessionForm
 from django.contrib import messages
 
 def chatbot(request):
@@ -117,32 +117,19 @@ def show_patient(request, id):
     patient = get_object_or_404(Patient, id=id, professional=professional)
     sessions = Session.objects.filter(patient=patient, professional=professional)
 
-    # if request.method == 'POST':
-    #     print("RECIBIENDO DATOS")
-    #     form = PatientSessionForm(request.POST, professional=professional)
-    #     if form.is_valid():
-    #         session = form.save(commit=False)
-    #         session.professional = professional
-    #         session.patient = patient
-    #         print("FORM VALIDO")
-    #         print(session)
-    #         session.save()
-    #         messages.success(request, 'La sesión ha sido guardada con éxito.')
-    #         return redirect('core:professional_patient_detail', id=patient.id) 
-    #     else:
-    #         messages.error(request, 'Hubo un error al guardar la sesión. Por favor, revise los datos ingresados.')
-    # else:
-    #     form = PatientSessionForm()
-    # Crear una cadena de texto con la información del paciente y sus sesiones
-    prompt = get_session_recommendation(patient, sessions)
+    custom_prompt = request.GET.get("custom-prompt")
+    if custom_prompt:
+        prompt = get_session_custom_request(patient, sessions, custom_prompt)
+    else:
+        prompt = get_session_recommendation(patient, sessions)
+
+    print(prompt)
     recommendation = ask_openai([], prompt)
-    # print(recommendation)
 
     return render(request, 'professional/patient_detail.html', {
         'patient': patient,
-        # 'form': form
         'sessions': sessions,
-        'recommendation': recommendation
+        'recommendation': recommendation,
     })
 
 @login_required
