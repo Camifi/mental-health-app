@@ -1,20 +1,24 @@
 {% extends 'professional/base.html' %}
 
 {% block content %}
-<div class="container mt-3">
-    <h2>{% if session.id %}Editar Sesión{% else %}Crear Sesión{% endif %}</h2>
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
-        {% endfor %}
+<div class="container mt-3 d-flex flex-column align-items-center justify-content-center">
+    <div style="width: 800px; margin: 0 auto;">
+        <div style="width: 100%">
+            <a href="{% url 'core:session_list' %}" class="btn btn-secondary mt-2">Volver a la lista</a>
+        </div>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <h2 class="my-4">{% if session.id %}Editar Sesión{% else %}Crear Sesión{% endif %}</h2>
+        <form method="post" novalidate style="width: 100%">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
     </div>
-    {% endif %}
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Guardar</button>
-    </form>
-    <a href="{% url 'core:session_list' %}" class="btn btn-secondary mt-2">Volver a la lista</a>
 </div>
 {% endblock %}

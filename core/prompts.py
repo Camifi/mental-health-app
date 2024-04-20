@@ -98,7 +98,6 @@ def get_professional_list_formatted(professional_list):
     return "\n".join(formatted_list)
 
 def get_session_recommendation(patient, sessions):
- 
     prompt = (
         f"Eres un asistente virtual que brinda soporte a psicólogos en la preparación de sus sesiones. "
         "Debes ofrecer sugerencias de enfoques terapéuticos y actividades basadas en la información del paciente y las sesiones anteriores máximo hasta 400 caracteres "
@@ -108,18 +107,18 @@ def get_session_recommendation(patient, sessions):
         f"- Descripción de Síntomas: {patient.symptoms_description}\n"
         f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
     )
-    
-    prompt = (
-    f"Eres un asistente virtual que apoya a psicólogos en la preparación de sus sesiones. "
-    "Tu tarea es sugerir enfoques terapéuticos y actividades según la información del paciente y las sesiones previas, "
-    "con un límite de 350 caracteres por sugerencia. No debes realizar diagnósticos, pero sí puedes recomendar recursos como PDFs, vídeos y libros. "
-    f"\n\nInformación del paciente {patient.user.full_name}:\n"
-    f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
-    f"- Descripción de síntomas: {patient.symptoms_description}\n"
-    f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
-)
 
-# Si hay sesiones previas, agregar recomendaciones basadas en el progreso
+    prompt = (
+        f"Eres un asistente virtual que apoya a psicólogos en la preparación de sus sesiones. "
+        "Tu tarea es sugerir enfoques terapéuticos y actividades según la información del paciente y las sesiones previas, "
+        "con un límite de 350 caracteres por sugerencia. No debes realizar diagnósticos, pero sí puedes recomendar recursos como PDFs, vídeos y libros. "
+        f"\n\nInformación del paciente {patient.user.full_name}:\n"
+        f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
+        f"- Descripción de síntomas: {patient.symptoms_description}\n"
+        f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
+    )
+
+    # Si hay sesiones previas, agregar recomendaciones basadas en el progreso
     if sessions:
         prompt += (
         "Puedes dar sugerencias en base a la información del paciente y las sesiones ya creadas\n\n"
@@ -137,6 +136,64 @@ def get_session_recommendation(patient, sessions):
         "Para la primera sesión con este paciente, considera las siguientes recomendaciones iniciales: "
         "Establecer un ambiente de confianza, explorar a profundidad los motivos de la consulta y los síntomas descritos, "
         "y dialogar sobre los objetivos y expectativas de la terapia. Máximo 350 caracteres"
+    )
+
+    return prompt
+
+
+def get_session_custom_request(patient, sessions, custom_prompt):
+    prompt = (
+        f"Eres un asistente virtual que apoya a psicólogos en la preparación de sus sesiones. "
+        "Tu tarea es responder LA CONSULTA DEL PROFESIONAL según tu conocimiento, la información del paciente y su historial de sesiones."
+        "No debes realizar diagnósticos, pero sí puedes recomendar enfoques terapéuticos y actividades según la información del paciente y las sesiones previas, "
+        "recursos como PDFs, vídeos y libros. PERO PRINCIPALMENTE RESPONDER LA CONSULTA DEL PROFESIONAL de la manera más corta y concisa posible, sin dejar de ser amable."
+        f"\n\nInformación del paciente {patient.user.full_name}:\n"
+        f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
+        f"- Descripción de síntomas: {patient.symptoms_description}\n"
+        f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
+    )
+
+    # Si hay sesiones previas, agregar recomendaciones basadas en el progreso
+    if sessions:
+        for session in sessions:
+            prompt += f"- Sesión del {session.session_date}: Objetivos alcanzados: {session.objectives}\n"
+            if session.difficulties:
+                prompt += f"Dificultades: {session.difficulties}\n"
+            prompt += "Considera técnicas ajustadas a los desafíos encontrados.\n"
+    else:
+        prompt += (
+        "Es la primera sesión con este paciente, no hay historial, solo responde LA CONSULTA DEL PROFESIONAL según tu base de conocimientos y su perfil."
+    )
+    
+    prompt += f"LA CONSULTA DEL PROFESIONAL ES: {custom_prompt}"
+    prompt += "\n\nAhora si, responde:"
+
+    return prompt
+
+def get_session_csv_report(patient, sessions):
+    prompt = (
+        "Eres un asistente virtual que apoya a psicólogos en la preparación de sus sesiones. "
+        "Tu tarea es generar un CSV a partir de las sesiones de este paciente. Genera un reporte inteligente de cada sesión, estandarizando el lenguaje "
+        "de las sesiones, redactando y resumiendo bien en caso la sesión sea muy larga, ordenando por fechas, generando una columna extra "
+        "llamada 'etiqueta' donde vas a generar etiquetas relacionadas a la sesión. Ejemplo: cigarrillo, adicción, bullying, insomnio.\n\n"
+        f"Información del paciente {patient.user.full_name}:\n"
+        f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
+        f"- Descripción de síntomas: {patient.symptoms_description}\n"
+        f"- Objetivos de la terapia: {patient.therapy_goals}\n\n"
+    )
+
+    # Si hay sesiones previas, agregar recomendaciones basadas en el progreso
+    if sessions:
+        for session in sessions:
+            prompt += f"- Sesión del {session.session_date}: Objetivos alcanzados: {session.objectives}\n"
+            if session.difficulties:
+                prompt += f"Dificultades: {session.difficulties}\n"
+        prompt += "\n\nLas columnas necesarias en tu CSV son: nombre paciente, fecha de sesión, objetivos alcanzados, dificultades, puntos positivos, puntos negativos, etiquetas.\n"
+        prompt += "\nLos puntos negativos y positivos debes redactarlo tu a base de los objetivos alcanzados y las dificultades, autocompletalos.\n"
+        prompt += "Genera y responde directamente con el CSV, una fila por sesión, ni un saludo ni nada, SOLO EL CSV\n"
+    else:
+        prompt += (
+        "Es la primera sesión con este paciente, no hay historial, devuelve un CSV vacío\n"
     )
 
     return prompt
