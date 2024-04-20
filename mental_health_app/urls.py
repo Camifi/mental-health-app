@@ -16,5 +16,8 @@ urlpatterns = [
     path('delete_account/', user_views.UserDeleteView.as_view(), name='delete_account'),    
     path('', include(('core.urls', 'core'), namespace='core')),  # Incluye las URLs de 'core' con espacio de nombres
     path('password_reset/',auth_views.PasswordResetView.as_view(),name='password_reset'),
-    path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done')
+    path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
+    path('privacy-policy/', user_views.privacy_policy, name='privacy_policy'),
+     path('blog/', user_views.blog_index, name='blog_index'),
+    path('<int:pk>/', user_views.blog_detail, name='blog_detail'),
 ]

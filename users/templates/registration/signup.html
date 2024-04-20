@@ -84,6 +84,12 @@
             required
           />
         </div>
+      <div class="input-field-acceptance">
+        <label>
+          <input type="checkbox" name="privacy_policy" required />
+          He leído y acepto la <a href="{% url 'privacy_policy' %}" target="_blank">política de privacidad</a>.
+        </label>
+      </div>
       </div>
 
         <input type="submit" value="Registrar" class="btn solid" />

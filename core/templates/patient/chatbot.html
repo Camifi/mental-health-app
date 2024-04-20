@@ -1,6 +1,15 @@
 {% extends 'patient/base.html' %} 
 {% load static %} 
 {% block content %}
+
+
+<div class="container-general">
+  <div class="container mt-3 titulo-descripcion">
+  <h2 class="font-weight-bold">¿Qué hace el chatbot por ti?</h2>
+  <p>El chatbot actúa como tu primer punto de contacto, haciéndote preguntas para entender tus necesidades y establecer
+    un perfil inicial. Este perfil es esencial para personalizar tu experiencia y asegurar que los profesionales de la
+    salud tengan la información necesaria para comenzar tu cuidado.</p>
+</div>
 <div class="chat-container">
   <div class="card flex-grow-1">
     <div class="chatbot-header">
@@ -13,7 +22,7 @@
     <div class="card-body messages-box">
       <ul
         class="list-unstyled messages-list"
-        style="height: 60vh; overflow-y: auto"
+       
       >
        {% for message in chats %}
     <li class="{{ message.is_from_user|yesno:'sent-message,received-message' }}">
@@ -45,8 +54,8 @@
       </div>
     </div>
   </form>
+  </div>
 </div>
-
 <script>
 // myTODO: mover a un chatbot.js e importar 
  document.addEventListener("DOMContentLoaded", function() {

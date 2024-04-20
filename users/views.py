@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic.edit import DeleteView
 from core.models import Patient, Professional
-from users.models import User
+from users.models import Post, User
 from users.forms import CustomUserCreationForm
 from django.contrib import messages
 from .forms import CustomUserCreationForm, ProfessionalAdditionalInfoForm, UserCommonInfoForm
@@ -161,3 +161,27 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
         response = super().delete(request, *args, **kwargs)  # Elimina el objeto User
         logout(request)  # Cierra la sesión del usuario
         return response
+    
+
+    
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
+def my_custom_page_not_found_view(request, exception):
+    return render(request, '404.html', {}, status=404)
+
+
+#blog
+def blog_index(request):
+    posts = Post.objects.all().order_by('-created_on')
+    context = {
+        'posts': posts
+    }
+    return render(request, 'blog_index.html', context)
+
+def blog_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+    context = {
+        'post': post
+    }
+    return render(request, 'blog_detail.html', context)

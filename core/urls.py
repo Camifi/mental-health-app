@@ -12,6 +12,7 @@ urlpatterns = [
     path('professionals/<slug:slug>/', views.professional_detail, name='professional_detail'),
     path('connect/<int:professional_id>/', views.connectProfessional, name='connect_professional'),
     path('disconnect/', views.disconnectProfessional, name='disconnect_professional'),
+  
     
      
     # rutas para professional
@@ -21,7 +22,7 @@ urlpatterns = [
     path('professional/patients/<int:id>/', views.show_patient, name='professional_patient_detail'),
   
     path('sessions/', views.session_list, name='session_list'),
-    path('sessions/create/', views.create_session, name='create_session'),
+    path('sessions/create/<int:patient_id>/', views.create_session, name='create_session'),
     path('sessions/edit/<int:pk>/', views.edit_session, name='edit_session'),  # Editar una sesión existente
     path('sessions/delete/<int:pk>/', views.delete_session, name='delete_session') 
 

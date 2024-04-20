@@ -1,0 +1,95 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Política de Privacidad</title>
+    <!--====== Style CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/assets-home/style.css' %}">
+
+
+</head>
+
+<body>
+    <div class="title-h2">
+        <h2>Políticas de privacidad</h2>
+    </div>
+
+    <div class="faq-container">
+
+        <div class="faq-wrapper">
+            <!-- Bloque de FAQ -->
+            <!-- Repetir este bloque para cada FAQ que desees agregar -->
+            <div class="faq-block active">
+                <div class="faq-header">
+                    <span>Datos que Recopilamos</span>
+                    <!-- Ícono de SVG aquí -->
+                </div>
+                <div class="faq-body">
+                    <p>
+                        <strong>Información proporcionada por el usuario:</strong> Recogemos datos personales que los pacientes
+                        proporcionan al interactuar con
+                        el chatbot, como su nombre, edad, síntomas...
+                        <br>
+                
+                        <strong>Uso de la información</strong> Utilizamos la información recopilada para facilitar la comunicación entre
+                        pacientes y psicólogos.       
+                    </p>
+                </div>
+            </div>
+            <div class="faq-block">
+                <div class="faq-header">
+                    <span> Compartir Información</span>
+                    <!-- Ícono de SVG aquí -->
+                </div>
+                <div class="faq-body">
+                    <p>
+                        <strong>Con psicólogos:</strong> Compartimos los datos de los pacientes con los psicólogos registrados en
+                        nuestra
+                        plataforma, solo con el
+                        propósito de proporcionar atención de salud mental.
+                
+                    </p>
+                </div>
+                </div>
+                <div class="faq-block">
+                    <div class="faq-header">
+                        <span>Almacenamiento y Seguridad
+                        </span>
+                        <!-- Ícono de SVG aquí -->
+                    </div>
+                    <div class="faq-body">
+                        <p>
+                            Nos esforzamos por implementar medidas técnicas y organizativas para proteger la información personal contra
+                            el acceso,
+                            la alteración, la divulgación o la destrucción no autorizados. Sin embargo, ningún sistema puede ser
+                            completamente
+                            seguro.
+                
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-block">
+                    <div class="faq-header">
+                        <span>Derechos del Usuario
+                        </span>
+                        <!-- Ícono de SVG aquí -->
+                    </div>
+                    <div class="faq-body">
+                        <p>
+                            Los usuarios pueden acceder, corregir o eliminar su información personal en cualquier momento a través de la
+                            configuración de su cuenta o poniéndose en contacto con nosotros directamente.
+                        </p>
+                    </div>
+                </div>
+            <!-- Fin del bloque de FAQ -->
+        </div>
+    </div>
+
+
+    <script src="{% static 'js/faq_accordion.js' %}" defer></script>
+</body>
+
+</html>

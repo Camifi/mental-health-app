@@ -1,0 +1,7 @@
+
+<h1>{{ post.title }}</h1>
+<p>Posted on {{ post.created_on }} by {{ post.author }}</p>
+<div>
+    {{ post.body|linebreaks }}
+</div>
+{% endblock %}

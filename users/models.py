@@ -25,7 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     email = models.EmailField("correo electrónico", max_length=254, unique=True)
     phone_number = models.CharField("Celular",max_length=20, blank=True)
-    city = models.CharField("Ciudad donde vives",max_length=255, blank=True)
+    city = models.ManyToManyField('core.CityOption', related_name='users', blank=True)
     birthday = models.DateField("Fecha de nacimiento",null=True, blank=True)
     is_staff = models.BooleanField("staff", default=False)
     is_active = models.BooleanField(default=True)
@@ -39,9 +39,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # para que la terminal nos pida estos datos al crear un superuser
     REQUIRED_FIELDS = ['email', 'full_name']
-    
-    
-
     objects = UserManager()
     groups = models.ManyToManyField(
         verbose_name='groups',
@@ -61,3 +58,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_staff': True})
+    featured_image = models.ImageField(upload_to='posts/', blank=True, null=True) 
+
+    def __str__(self):
+        return self.title
+    
+
+   

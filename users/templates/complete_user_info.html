@@ -28,10 +28,14 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="{{ form.city.id_for_label }}">Ciudad</label>
-                                    <input type="text" class="form-control" id="{{ form.city.id_for_label }}" name="{{ form.city.html_name }}" placeholder="Ciudad" value="{{ form.city.value }}">
-                                </div>
+                            <div class="form-group">
+                                <label for="{{ form.city.id_for_label }}">Ciudad</label>
+                                <select multiple class="form-control" id="{{ form.city.id_for_label }}" name="{{ form.city.html_name }}">
+                                    {% for city in form.city.field.queryset %}
+                                    <option value="{{ city.pk }}" {% if city.pk in form.city.value %}selected{% endif %}>{{ city.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                                 <div class="form-group">
                                     <label for="{{ form.birthday.id_for_label }}">Fecha de Nacimiento</label>
                                     <input type="date" class="form-control" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.birthday.value }}">

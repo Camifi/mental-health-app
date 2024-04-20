@@ -1,15 +1,17 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Message, Patient, Professional, Session
+from .models import Message, Patient, Professional, Session, User
 from .helpers import ask_openai, create_patient
-from django.http import JsonResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponseForbidden, JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
 from .models import Message, Patient 
 from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation
-from django.contrib.auth.decorators import login_required
-from .forms import SessionForm, PatientSessionForm
+from django.contrib.auth.decorators import login_required,user_passes_test
+from .forms import SessionForm
 from django.contrib import messages
 
 def chatbot(request):
+    if request.user.user_type != User.UserTypeChoices.PATIENT:
+        return HttpResponseForbidden("No autorizado")
     if request.method == 'POST':
         message_content = request.POST.get('message')
         
@@ -90,18 +92,26 @@ def clear_chat(request, user_id):
 
 # myTODO: vista chatbot profesional 
 def chatbot_profesional(request):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     return render(request,'professional/chatbot.html')
 
 def welcome_professional(request):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     return render(request,'professional/home.html')
 
 @login_required
 def dashboard_patient(request):
+    if request.user.user_type != User.UserTypeChoices.PATIENT:
+        return HttpResponseForbidden("No autorizado")
     user = request.user
     return render(request,'patient/home.html', {'user': user})
 
 @login_required
 def list_patients(request):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     try:
         professional = Professional.objects.get(user=request.user)
         patients = professional.patients.all()
@@ -111,43 +121,96 @@ def list_patients(request):
     
     return render(request, 'professional/patients_list.html', {'patients': patients})
 
+
 @login_required
 def show_patient(request, id):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
+
     professional = get_object_or_404(Professional, user=request.user)
     patient = get_object_or_404(Patient, id=id, professional=professional)
     sessions = Session.objects.filter(patient=patient, professional=professional)
 
-    # if request.method == 'POST':
-    #     print("RECIBIENDO DATOS")
-    #     form = PatientSessionForm(request.POST, professional=professional)
-    #     if form.is_valid():
-    #         session = form.save(commit=False)
-    #         session.professional = professional
-    #         session.patient = patient
-    #         print("FORM VALIDO")
-    #         print(session)
-    #         session.save()
-    #         messages.success(request, 'La sesión ha sido guardada con éxito.')
-    #         return redirect('core:professional_patient_detail', id=patient.id) 
-    #     else:
-    #         messages.error(request, 'Hubo un error al guardar la sesión. Por favor, revise los datos ingresados.')
-    # else:
-    #     form = PatientSessionForm()
-    # Crear una cadena de texto con la información del paciente y sus sesiones
+    if request.method == 'POST':
+        form = SessionForm(request.POST)
+        if form.is_valid():
+            new_session = form.save(commit=False)
+            new_session.professional = professional
+            new_session.patient = patient  # Asegurar que el paciente se establece
+            new_session.save()
+            return redirect('show_patient', id=id)
+    else:
+        form = SessionForm()
+
+    # Lógica para generar recomendaciones
     prompt = get_session_recommendation(patient, sessions)
     recommendation = ask_openai([], prompt)
-    # print(recommendation)
 
     return render(request, 'professional/patient_detail.html', {
         'patient': patient,
-        # 'form': form
         'sessions': sessions,
+        'form': form,  # Asegúrate de pasar el formulario al template
         'recommendation': recommendation
     })
+#sesiones
+@login_required
+def create_session(request, patient_id):
+    professional = Professional.objects.get(user=request.user)
+    patient = get_object_or_404(Patient, id=patient_id)  # Asegúrate de que el paciente existe
+
+    if request.method == 'POST':
+        form = SessionForm(request.POST, professional=professional)
+        if form.is_valid():
+            session = form.save(commit=False)
+            session.professional = professional
+            session.patient = patient
+            session.save()
+            messages.success(request, 'La sesión ha sido creada exitosamente.')
+            return redirect('core:professional_patient_detail', id=patient_id) 
+    else:
+        form = SessionForm(professional=professional)
+
+    return render(request, 'professional/session_form.html', {'form': form})
+@login_required
+def delete_session(request, pk):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
+    session = get_object_or_404(Session, pk=pk)
+    # Asegurar que el paciente asociado a la sesión esté bajo el cuidado del profesional actual
+    if session.patient.professional.user != request.user:
+        return redirect('core:session_list')  # O puedes mostrar un mensaje de error
+    
+    if request.method == 'POST':
+        session.delete()
+        return redirect('core:professional_patient_detail', id=session.patient.id)
+    return render(request, 'professional/session_confirm_delete.html', {'session': session})
 
 @login_required
+def edit_session(request, pk):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
+    session = get_object_or_404(Session, pk=pk)
+    # Verificar que el paciente de la sesión esté bajo el profesional del usuario actual
+    if session.patient.professional.user != request.user:
+         messages.success(request, 'ERROR.')
+
+    if request.method == 'POST':
+        form = SessionForm(request.POST, instance=session)
+        if form.is_valid():
+            messages.success(request, 'Sesión actualizada correctamente.')
+            return redirect('core:professional_patient_detail', id=session.patient.id)
+        else:
+            # Si el formulario no es válido, añade un mensaje de error.
+            messages.error(request, 'Por favor, corrige los errores abajo.')
+    else:
+        form = SessionForm(instance=session)
+    return render(request, 'professional/session_form.html', {'form': form})
+
+@login_required
+
 def connectProfessional(request, professional_id):
-    # Recupera el usuario de la sesión
+    if request.user.user_type != User.UserTypeChoices.PATIENT:
+        return HttpResponseForbidden("No autorizado")
     user = request.user
     
     # Intenta recuperar el perfil de Patient asociado al usuario
@@ -183,29 +246,20 @@ def disconnectProfessional(request):
     messages.success(request, 'Desconexión del profesional realizada con éxito.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-#sesiones
-@login_required
-def create_session(request):
-    professional = Professional.objects.get(user=request.user)  # Asumiendo que cada User tiene un Professional asociado
-    if request.method == 'POST':
-        form = SessionForm(request.POST, professional=professional)
-        if form.is_valid():
-            session = form.save(commit=False)
-            session.professional = professional
-            session.save()
-            return redirect('core:session_list')
-    else:
-        form = SessionForm(professional=professional)
-    return render(request, 'professional/session_form.html', {'form': form})
+
 
 @login_required
 def session_list(request):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     professional = Professional.objects.get(user=request.user)
     queryset = Session.objects.filter(professional=professional)
 
     # Filtros
 @login_required
 def session_list(request):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     professional = request.user.professional_profile
     queryset = Session.objects.filter(professional=professional).select_related('patient')
 
@@ -227,30 +281,23 @@ def session_list(request):
     })
 
 
-@login_required
-def delete_session(request, pk):
-    session = get_object_or_404(Session, pk=pk)
-    # Asegurar que el paciente asociado a la sesión esté bajo el cuidado del profesional actual
-    if session.patient.professional.user != request.user:
-        return redirect('core:session_list')  # O puedes mostrar un mensaje de error
-    
-    if request.method == 'POST':
-        session.delete()
-        return redirect('core:session_list')  # Redirigir a la lista de sesiones tras eliminar
-    return render(request, 'professional/session_confirm_delete.html', {'session': session})
 
-@login_required
-def edit_session(request, pk):
-    session = get_object_or_404(Session, pk=pk)
-    # Verificar que el paciente de la sesión esté bajo el profesional del usuario actual
-    if session.patient.professional.user != request.user:
-        return redirect('core:session_list')  # O puedes mostrar un mensaje de error
 
-    if request.method == 'POST':
-        form = SessionForm(request.POST, instance=session)
-        if form.is_valid():
-            form.save()
-            return redirect('core:session_list')
-    else:
-        form = SessionForm(instance=session)
-    return render(request, 'professional/session_form.html', {'form': form})
+
+ # if request.method == 'POST':
+    #     print("RECIBIENDO DATOS")
+    #     form = PatientSessionForm(request.POST, professional=professional)
+    #     if form.is_valid():
+    #         session = form.save(commit=False)
+    #         session.professional = professional
+    #         session.patient = patient
+    #         print("FORM VALIDO")
+    #         print(session)
+    #         session.save()
+    #         messages.success(request, 'La sesión ha sido guardada con éxito.')
+    #         return redirect('core:professional_patient_detail', id=patient.id) 
+    #     else:
+    #         messages.error(request, 'Hubo un error al guardar la sesión. Por favor, revise los datos ingresados.')
+    # else:
+    #     form = PatientSessionForm()
+    # Crear una cadena de texto con la información del paciente y sus sesiones

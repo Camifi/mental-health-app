@@ -38,7 +38,7 @@
                                         <th>Paciente</th>
                                         <th>Objetivos</th>
                                         <th>Dificultades</th>
-                                        <th>Acciones</th>
+                               
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -48,10 +48,7 @@
                                         <td>{{ session.patient.user.full_name }}</td>
                                         <td>{{ session.objectives }}</td>
                                         <td>{{ session.difficulties }}</td>
-                                        <td>
-                                            <a href="{% url 'core:edit_session' session.id %}">Editar</a>
-                                            <a href="{% url 'core:delete_session' session.id %}">Eliminar</a>
-                                        </td>
+                                        
                                     </tr>
                                     {% endfor %}
                                 </tbody>

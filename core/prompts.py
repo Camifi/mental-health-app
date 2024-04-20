@@ -122,7 +122,10 @@ def get_session_recommendation(patient, sessions):
 # Si hay sesiones previas, agregar recomendaciones basadas en el progreso
     if sessions:
         prompt += (
-        "Basado en las sesiones anteriores, aquí algunas sugerencias para la próxima sesión:\n\n"
+        "Puedes dar sugerencias en base a la información del paciente y las sesiones ya creadas\n\n"
+        "como puede avanzar en la próxima sesión, que puntos tener en cuenta, y si se da el caso recomendar materiales que puedan servirle al paciente como pdf, videos etc\n\n"
+        "Recuerda no dar diagnosticos ya que tu rol aquí es nada más orientar.  La recomendación debe ser máximo de 350 caracteres"
+
     )
     for session in sessions:
         prompt += f"- Sesión del {session.session_date}: Objetivos alcanzados: {session.objectives}\n"
@@ -133,7 +136,7 @@ def get_session_recommendation(patient, sessions):
          prompt += (
         "Para la primera sesión con este paciente, considera las siguientes recomendaciones iniciales: "
         "Establecer un ambiente de confianza, explorar a profundidad los motivos de la consulta y los síntomas descritos, "
-        "y dialogar sobre los objetivos y expectativas de la terapia."
+        "y dialogar sobre los objetivos y expectativas de la terapia. Máximo 350 caracteres"
     )
 
     return prompt

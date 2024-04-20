@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from core.models import Patient, Professional
+from core.models import CityOption, Patient, Professional
 
 User = get_user_model()
 
@@ -28,11 +28,18 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class UserCommonInfoForm(forms.ModelForm):
+    city = forms.ModelMultipleChoiceField(
+        queryset=CityOption.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+        required=False
+    )
+
     class Meta:
         model = User
         fields = ['gender', 'birthday', 'city']
         widgets = {
             'birthday': forms.DateInput(attrs={'type': 'date'}),
+            # Asumiendo que quieres mantener el widget por defecto para 'gender' y 'birthday'
         }
 
 # Formulario para actualizar la información adicional del profesional

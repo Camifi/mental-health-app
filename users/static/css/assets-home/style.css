@@ -17,7 +17,7 @@ body {
 img {
   max-width: 100%; }
 
-a:focus,
+a:focus,q
 input:focus,
 textarea:focus,
 button:focus {
@@ -809,4 +809,71 @@ p {
     animation-name: fadeInUp;
     animation-duration: 1s;
     animation-fill-mode: both;
+}
+.title-h2 h2 {
+  text-align: center; /* Centra el título */
+  margin: 0; /* Elimina los márgenes por defecto si los hay */
+  padding-top: 40px;
+  width: 100%; /* Asegura que ocupe el ancho total */
+  color: #2F2E41;
+}
+
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+  margin: auto;
+  width: 50%;
+  padding-top: 50px;
+}
+
+.faq-wrapper .faq-block .faq-header {
+  display: flex;
+  padding: 25px 0px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+}
+
+
+
+.faq-wrapper .faq-block .faq-header svg {
+  transition: transform 0.25s ease-in;
+}
+
+.faq-wrapper .faq-block .faq-body {
+  height: 0px;
+  overflow-y: hidden;
+  transition: height 0.25s ease-in;
+  border-bottom: 1px solid #eceff8;
+}
+
+/* Cuando está activo */
+.faq-wrapper .faq-block.active .faq-header svg {
+  transform: rotate(180deg);
+}
+
+.faq-wrapper .faq-block .faq-body p {
+  font-size: 14px; /* Tamaño de fuente para los párrafos */
+}
+/* Asegurarse de que el contenido del acordeón activo se muestre */
+.faq-wrapper .faq-block.active .faq-body {
+  display: block; /* o 'height: auto;' si estás animando la altura */
+  /* Ajusta el siguiente valor al alto del contenido de tu .faq-body */
+  height: auto; /* o establece un valor específico si es necesario */
+}
+@media screen and (max-width: 768px) {
+
+
+  .faq-container {
+    width: 80%; /* Ajusta el ancho del contenedor para dispositivos móviles */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .faq-container {
+    width: 90%; /* Ajusta el ancho del contenedor para dispositivos más pequeños */
+  }
 }
