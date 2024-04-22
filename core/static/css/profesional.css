@@ -97,6 +97,8 @@ color: #17c0eb
   margin-top: auto;
   margin-right: 5px;
   color: #717BBC;
+  font-size: 16px;
+  border-radius: 10px;
 
 }
 
@@ -513,4 +515,14 @@ padding-right: 50px;
   color: red; /* Cambia el color del texto según tus preferencias */
 }
 
-
+.btn-disconnect {
+  background-color: #ff0000; /* Color rojo */
+  color: #ffffff; /* Color blanco para el texto */
+  border: none;
+  padding: 8px 16px; /* Ajusta el padding según tus preferencias */
+  border-radius: 4px; /* Ajusta el radio según tus preferencias */
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease; /* Agrega transición suave para el color de fondo */
+}

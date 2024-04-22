@@ -58,9 +58,9 @@
             {% endif %}
 
             {% if patient.professional.id == professional.id %}
-              <button class="btn-disconnect" onclick="confirmDisconnect(event)">  <!-- myTODO: poner boton de color rojo -->
-                <a href="{% url 'core:disconnect_professional' %}" style="color: inherit; text-decoration: none;">
-                <i class="fa-solid fa-user-group"></i> Desconectar
+              <button class="btn-disconnect" onclick="confirmDisconnect(event)">
+                <a href="{% url 'core:disconnect_professional' %}"  style="color: inherit; text-decoration: none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Desconectar
                 </a>
             </button>
             {% endif %}

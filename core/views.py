@@ -172,11 +172,41 @@ def create_session(request, patient_id):
             session.patient = patient
             session.save()
             messages.success(request, 'La sesión ha sido creada exitosamente.')
-            return redirect('core:professional_patient_detail', id=patient_id) 
+            return redirect('core:professional_patient_detail', id=patient_id)
     else:
         form = SessionForm(professional=professional)
 
-    return render(request, 'professional/session_form.html', {'form': form})
+    context = {
+        'form': form,
+        'patient_id': patient_id,  # Asegúrate de pasar esto
+        'session': None
+    }
+    return render(request, 'professional/session_form.html', context)
+
+@login_required
+def edit_session(request, pk):
+    session = get_object_or_404(Session, pk=pk)
+
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL or session.patient.professional.user != request.user:
+        return HttpResponseForbidden("No autorizado")
+
+    if request.method == 'POST':
+        form = SessionForm(request.POST, instance=session)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Sesión actualizada correctamente.')
+            return redirect('core:professional_patient_detail', id=session.patient.id)
+    else:
+        form = SessionForm(instance=session)
+
+    context = {
+        'form': form,
+        'patient_id': session.patient.id,  # Asegúrate de pasar esto
+        'session': session
+    }
+    return render(request, 'professional/session_form.html', context)
+
+
 @login_required
 def delete_session(request, pk):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
@@ -191,26 +221,7 @@ def delete_session(request, pk):
         return redirect('core:professional_patient_detail', id=session.patient.id)
     return render(request, 'professional/session_confirm_delete.html', {'session': session})
 
-@login_required
-def edit_session(request, pk):
-    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
-        return HttpResponseForbidden("No autorizado")
-    session = get_object_or_404(Session, pk=pk)
-    # Verificar que el paciente de la sesión esté bajo el profesional del usuario actual
-    if session.patient.professional.user != request.user:
-         messages.success(request, 'ERROR.')
 
-    if request.method == 'POST':
-        form = SessionForm(request.POST, instance=session)
-        if form.is_valid():
-            messages.success(request, 'Sesión actualizada correctamente.')
-            return redirect('core:professional_patient_detail', id=session.patient.id)
-        else:
-            # Si el formulario no es válido, añade un mensaje de error.
-            messages.error(request, 'Por favor, corrige los errores abajo.')
-    else:
-        form = SessionForm(instance=session)
-    return render(request, 'professional/session_form.html', {'form': form})
 
 @login_required
 

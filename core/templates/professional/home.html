@@ -19,7 +19,7 @@
                 Bienvenid@ @{{ user.username }}
               {% endif %}
             </h3>
-            <h6 class="font-weight-normal mb-0">Este es tu espacio para la gestión eficiente de pacientes.</h6>
+            <h6 class="font-weight-normal mb-0">Te invitamos a explorar nuestra plataforma donde podrás gestionar tus pacientes y ver el listado de tus sesiones</h6>
           </div>
           
         </div>
@@ -39,7 +39,7 @@
       </a>
       </div>
       <div class="col-md-6 grid-margin stretch-card">
-        <a href="{% url 'core:list_professionals' %}" style="color: inherit; text-decoration: none; display: block;">
+        <a href="{% url 'core:session_list' %}" style="color: inherit; text-decoration: none; display: block;">
         <div class="card card-light-blue">
           <div class="card-body">
             <img src="{% static 'images/sessions.svg' %}" class="image-card-2" alt="chatbot" />
@@ -48,8 +48,17 @@
           </div>
         </div>
       </a>
-
+   
       </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+      <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Conocé nuestra <a href="{% url 'privacy_policy' %}" target="_blank">Política de privacidad</a></span>
+      
+    </div>
+  </footer>
+</div>
    
 
       

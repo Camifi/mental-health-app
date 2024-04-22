@@ -1,8 +1,25 @@
-
-{% block content %}
-<h1>Blog</h1>
-{% for post in posts %}
-<h2><a href="{% url 'blog_detail' pk=post.pk %}">{{ post.title }}</a></h2>
-<p>Posted on {{ post.created_on }}</p>
-{% endfor %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/assets-home/style.css' %}">
 {% endblock %}
+{% block content %}
+<h2>Blog</h2>
+<div class="container-blog">
+  {% for post in posts %}
+    <div class="card">
+      <div class="card-header">
+        {% if post.featured_image %}
+          <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" />
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <a href="{% url 'blog_detail' pk=post.pk %}">
+        <h4 class="card-title">{{ post.title }}</h4>
+        <small>Posted on {{ post.created_on|date:"M d, Y" }}</small>
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+

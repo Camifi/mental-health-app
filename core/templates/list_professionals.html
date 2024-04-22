@@ -1,6 +1,12 @@
 {% extends 'patient/base.html' %} 
 {% load static %} {% block content %}
-
+<div class="main-panel">
+  <div class="content-wrapper">
+    <h3 class="font-weight-bold">
+      Profesionales
+    </h3>
+    <h6 class="font-weight-normal mb-0">Te invitamos a conocer y conectar con los profesionales</h6>
+  </div>
   <div class="container">
     {% for professional in professionals %}
     <div class="box">
@@ -19,7 +25,7 @@
     </div>
     {% endfor %}
   </div>
-
+</div>
    {% endblock %}
 
 </html>

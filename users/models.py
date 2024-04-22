@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from .managers import UserManager
+from tinymce.models import HTMLField
 
 
 
@@ -60,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    body = models.TextField()
+    body = HTMLField()  # Usar HTMLField en lugar de TextField
     created_on = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_staff': True})

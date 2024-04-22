@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'users',
+    'tinymce'
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 OPENAI_API_KEY = config["OPENAI_API_KEY"]
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 360,
+    'width': 1120,
+    'toolbar': 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+    'plugins': 'link image preview codesample contextmenu table code',
+}

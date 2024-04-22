@@ -9123,6 +9123,7 @@ pre code {
   .container-md {
     max-width: 720px;
   }
+
 }
 
 @media (min-width: 992px) {
@@ -10419,9 +10420,9 @@ pre code {
 
 @media (max-width: 767.98px) {
   .table-responsive-md {
-    display: block;
+    display: block!important;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: auto!important;
     -webkit-overflow-scrolling: touch;
   }
   .table-responsive-md > .table-bordered {
@@ -10455,7 +10456,7 @@ pre code {
 @media(min-width:1200px){
 .table-responsive {
   display: block;
-  width: 1140px;
+  width: 1000 px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }}
@@ -11537,8 +11538,8 @@ fieldset:disabled .wizard > .actions a,
 .btn-primary,
 .wizard > .actions a {
   color: #fff;
-  background-color: #4b49ac;
-  border-color: #4b49ac;
+  background-color: #717BBC;
+  border-color: #717BBC;
 }
 
 .btn-primary:hover,
@@ -11546,6 +11547,7 @@ fieldset:disabled .wizard > .actions a,
   color: #fff;
   background-color: #3f3e91;
   border-color: #3b3a88;
+
 }
 
 .btn-primary:focus,
@@ -11767,6 +11769,7 @@ fieldset:disabled .wizard > .actions a,
   color: #fff;
   background-color: #ff4747;
   border-color: #ff4747;
+  margin-top:10px;
 }
 
 .btn-danger:hover {
@@ -21091,6 +21094,7 @@ button.bg-dark:focus,
 
 .mb-0,
 .my-0 {
+  color:#333;
   margin-bottom: 0 !important;
   font-size: 17px;
   line-height: 25px;
@@ -21234,6 +21238,7 @@ button.bg-dark:focus,
 .mb-4,
 .my-4 {
   margin-bottom: 1.5rem !important;
+  color: #717BBC;
 }
 
 .ml-4,
@@ -23167,7 +23172,10 @@ a.text-dark:focus {
   .u-designation,
 .email-wrapper .mail-list-container .mail-list .content .message_text,
 .email-wrapper .mail-list-container .mail-list .details .date {
-  color: #737f8b !important;
+  color: #333 !important;
+  font-size: 17px;
+  line-height: 25px;
+  width: 65%;
 }
 
 .text-black-50 {
@@ -26964,9 +26972,9 @@ padding-top: 10px;
 }
 
 .card .card-title {
-  color: #010101;
+  color: #2F2E41;
   margin-bottom: 1.2rem;
-  text-transform: capitalize;
+  
   font-size: 1.125rem;
   font-weight: 600;
 }
@@ -48842,4 +48850,35 @@ div.tagsinput span.tag a {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+
+.footer{
+  padding: 30px 2.45rem;
+  transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -webkit-transition: all 0.25s ease;
+  -ms-transition: all 0.25s ease;
+  font-size: calc(0.875rem - 0.05rem);
+  font-family: "Nunito", sans-serif;
+  font-weight: 400;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+
+}
+
+a.btn-sesion {
+  color: #717BBC;
+ font-weight: 600;
+  font-size: 14px;
+}
+/* CSS en tu archivo de estilos */
+@media (max-width: 768px) {
+  .custom-table-style {
+    overflow-x: auto;
+    display: block;
+  }
+  .img-fluid {
+    max-width: 100px;
+    height: auto;
+}
 }
