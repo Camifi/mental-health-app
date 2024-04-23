@@ -48,14 +48,14 @@
           ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer contraseña</a>
         </p>
         {% if messages %}
-  <div class="messages">
-    {% for message in messages %}
-      <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
+          <div class="messages">
+            {% for message in messages %}
+              <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
         </div>
       </form>
     </div>

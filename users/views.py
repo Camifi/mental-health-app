@@ -1,10 +1,8 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
+from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic.edit import DeleteView
@@ -75,51 +73,44 @@ def signin(request):
 def professional_dashboard(request):
     # Aquí iría cualquier lógica para recoger los datos que necesitas pasar a la plantilla.
     return render(request, 'dashboard_professional.html')
+
+
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
-            if User.objects.filter(email=email).exists():
-                messages.error(request, 'Un usuario con ese correo electrónico ya existe.')
-                return render(request, 'registration/signup.html', {'form': form})
             user = form.save()
             login(request, user)
             return redirect('select_user_type')
         else:
-            return render(request, 'registration/signup.html', {'form': form})
+            pass
     else:
         form = CustomUserCreationForm()
-        return render(request, 'registration/signup.html', {'form': form})
     
+    return render(request, 'registration/signup.html', {'form': form})
+
+
 #selecciona el tipo de usuario y almacena en su tabla correspondiente
 @login_required(login_url="signin")
 def complete_user_common_info(request):
-    is_editing = request.user.is_completed if hasattr(request.user, 'is_completed') else False
-    
     if request.method == "POST":
-        form = UserCommonInfoForm(request.POST, instance=request.user)  # Pasamos la instancia del usuario actual
+        form = UserCommonInfoForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
-            if not is_editing:
-                request.user.is_completed = True  # Marcar como completado si es la primera vez
-                request.user.save()
-            messages.success(request, 'Tu información ha sido actualizada exitosamente.')
+            with transaction.atomic():
+                form.save()
+                messages.success(request, 'Tu información ha sido actualizada exitosamente.')
 
-            # Redirigir según el tipo de usuario
-            if request.user.user_type == "PR":
-                return redirect('core:professional_home')
-            else:
-                return redirect('core:patient_home')
+                # Redirigir según el tipo de usuario
+                if request.user.user_type == "PR":
+                    return redirect('core:professional_home')
+                else:
+                    return redirect('core:patient_home')
         else:
             messages.error(request, "Por favor corrige los errores en el formulario.")
     else:
-        form = UserCommonInfoForm(instance=request.user)  # Inicializa el formulario con los datos del usuario
+        form = UserCommonInfoForm(instance=request.user)
 
-    context = {
-        'form': form,
-        'is_editing': is_editing
-    }
+    context = { 'form': form }
     return render(request, 'complete_user_info.html', context)
 
 

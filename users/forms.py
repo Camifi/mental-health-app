@@ -16,6 +16,25 @@ class CustomUserCreationForm(UserCreationForm):
         # Asegúrate de incluir los campos adicionales que quieres mostrar en el formulario
         fields = UserCreationForm.Meta.fields + ('full_name', 'phone_number', 'email')
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Un usuario con ese correo electrónico ya existe.")
+        return email
+    
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Este nombre de usuario ya está en uso.")
+        return username
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Las contraseñas no coinciden.")
+        return password2
+
     def save(self, commit=True):
         # Guarda los datos proporcionados por el formulario con el usuario
         user = super().save(commit=False)
