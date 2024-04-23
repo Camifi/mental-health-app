@@ -4,7 +4,7 @@ from .helpers import ask_openai, create_patient
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from .models import Message, Patient 
-from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation, get_session_custom_request, get_session_csv_report
+from .prompts import get_initial_prompt, get_patient_completed_prompt, get_session_recommendation, get_session_custom_request, get_session_csv_report, get_professional_prompt
 from django.contrib.auth.decorators import login_required
 from .forms import SessionForm
 from django.contrib import messages
@@ -96,7 +96,36 @@ def clear_chat(request, user_id):
 def chatbot_profesional(request):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")
-    return render(request,'professional/chatbot.html')
+    
+    if not request.user.is_completed:
+        return redirect('complete_professional_profile')
+
+    if request.method == 'POST':
+        message_content = request.POST.get('message')
+        
+        # Guardar mensaje de usuario
+        user_message = Message(user=request.user, content=message_content, is_from_user=True)
+        user_message.save()
+
+        chats = Message.objects.filter(user=request.user).order_by('id')
+
+        # Intenta obtener el registro de Patient para el usuario actual
+        professional = Professional.objects.get(user=request.user)
+        initial_message = get_professional_prompt(professional, request.user)
+        
+        # Si está completo, enviar un mensaje de bienvenida personalizado.
+        response_content = ask_openai(chats, initial_message)
+        
+        # Guardar la respuesta del bot y enviarla al usuario
+        bot_response = Message(user=request.user, content=response_content, is_from_user=False)
+        bot_response.save()
+
+        return JsonResponse({'message': message_content, 'response': response_content})
+    else:
+        # Cuando el usuario entra al chatbot, mostrarle los mensajes previos o la interfaz inicial.
+        chats = Message.objects.filter(user=request.user).order_by('id')
+        user_id = request.user.id
+        return render(request, 'professional/chatbot.html', {'chats': chats, 'user_id': user_id})
 
 def welcome_professional(request):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
@@ -114,6 +143,8 @@ def dashboard_patient(request):
 def list_patients(request):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")
+    if not request.user.is_completed:
+        return redirect('complete_professional_profile')
     try:
         professional = Professional.objects.get(user=request.user)
         patients = professional.patients.all()
@@ -269,6 +300,10 @@ def disconnectProfessional(request):
 def session_list(request):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")
+
+    if not request.user.is_completed:
+        return redirect('complete_professional_profile')
+
     professional = Professional.objects.get(user=request.user)
     queryset = Session.objects.filter(professional=professional)
 

@@ -55,6 +55,25 @@ def get_initial_prompt(prompt_type):
         professionals = Professional.objects.all()
         return SUGGEST_A_PROFESSIONAL_PROMPT + get_professional_list_formatted(professionals)
 
+def get_professional_prompt(professional, user):
+    return (
+        "Eres un bot programado para asistir a un profesional de la psicología en todas sus tareas y consultas. "
+        "Tu función es responder consultas relacionadas con la psicología, manteniendo el enfoque en este campo. "
+        "Si el usuario realiza preguntas fuera de tema, como '¿Quién ganó el último partido del Madrid?' o '¿Qué es un motor eléctrico?', "
+        "debes recordarle amablemente que tu rol es asistir exclusivamente en asuntos profesionales relacionados con la psicología. "
+        "Puedes ofrecer respuestas directas, proporcionar enlaces útiles, recomendar tratamientos o sistemas de terapias relevantes.\n\n"
+        
+        f"Estás asistiendo al profesional: {user.full_name} ubicado en Paraguay.\n\n"
+        
+        "Detalles del profesional:\n"
+        f"  - Título: {professional.title}\n"
+        f"  - Especialización: {professional.specialization}\n"
+        f"  - Certificaciones y cursos: {professional.certifications_or_courses}\n"
+        f"  - Enfoques terapéuticos: {professional.therapeutic_approaches}\n"
+        f"  - Modalidades de sesión: {professional.session_modalities}\n"
+        f"  - Biografía: {professional.biography}"
+    )
+
 def get_patient_completed_prompt(patient, user):
     initial = (f"Eres un bot programado para asistir usuarios en una web de consultas psicológicas, debes ser amable y empático con los usuarios y no salirte de contexto.\n\n"
             f"El usuario al que vas a atender se llama {user.full_name} y dale soporte en todo lo que necesite."
