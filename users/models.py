@@ -1,11 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-
 from .managers import UserManager
 from tinymce.models import HTMLField
-
-
-
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -58,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_query_name="user",
     )
 
-    
+
 class Post(models.Model):
     title = models.CharField(max_length=200)
     body = HTMLField()  # Usar HTMLField en lugar de TextField
@@ -69,6 +65,3 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
-
-   

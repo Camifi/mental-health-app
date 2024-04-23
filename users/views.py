@@ -124,6 +124,8 @@ def complete_professional_profile(request):
         form = ProfessionalAdditionalInfoForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
+            request.user.is_completed = True  # Asumiendo que hay un campo `is_completed`
+            request.user.save()
             # Redirigir a la página de bienvenida específica para profesionales tras guardar
             return redirect('core:professional_home')  # Asegúrate de que el nombre 'profesional-welcome' corresponda a tu URL configurada
     else:
