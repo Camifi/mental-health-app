@@ -128,3 +128,5 @@ TINYMCE_DEFAULT_CONFIG = {
     'toolbar': 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
     'plugins': 'link image preview codesample contextmenu table code',
 }
+
+LANGUAGE_CODE = 'es'

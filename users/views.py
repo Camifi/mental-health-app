@@ -75,23 +75,23 @@ def signin(request):
 def professional_dashboard(request):
     # Aquí iría cualquier lógica para recoger los datos que necesitas pasar a la plantilla.
     return render(request, 'dashboard_professional.html')
+
+
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
-            if User.objects.filter(email=email).exists():
-                messages.error(request, 'Un usuario con ese correo electrónico ya existe.')
-                return render(request, 'registration/signup.html', {'form': form})
             user = form.save()
             login(request, user)
             return redirect('select_user_type')
         else:
-            return render(request, 'registration/signup.html', {'form': form})
+            pass
     else:
         form = CustomUserCreationForm()
-        return render(request, 'registration/signup.html', {'form': form})
     
+    return render(request, 'registration/signup.html', {'form': form})
+
+
 #selecciona el tipo de usuario y almacena en su tabla correspondiente
 @login_required(login_url="signin")
 def complete_user_common_info(request):

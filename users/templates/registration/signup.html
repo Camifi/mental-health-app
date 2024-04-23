@@ -21,6 +21,7 @@
             name="{{ form.full_name.name }}"
             placeholder="Nombre y Apellido"
             id="id_{{ form.full_name.name }}"
+            value="{{ form.full_name.value|default_if_none:'' }}"
             required
           />
         </div>
@@ -33,6 +34,7 @@
             name="{{ form.phone_number.name }}"
             placeholder="Celular"
             id="id_{{ form.phone_number.name }}"
+            value="{{ form.phone_number.value|default_if_none:'' }}"
             required
           />
         </div>
@@ -45,8 +47,14 @@
             name="{{ form.email.name }}"
             placeholder="Correo Electrónico"
             id="id_{{ form.email.name }}"
+            value="{{ form.email.value|default_if_none:'' }}"
             required
           />
+          {% if form.email.errors %}
+            {% for error in form.email.errors %}
+              <div class="error" style="color: red;">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
         </div>
 
         <!-- Campo de Nombre de Usuario -->
@@ -57,8 +65,14 @@
             name="{{ form.username.name }}"
             placeholder="{{ form.username.label }}"
             id="id_{{ form.username.name }}"
+            value="{{ form.username.value|default_if_none:'' }}"
             required
           />
+          {% if form.username.errors %}
+            {% for error in form.username.errors %}
+              <div class="error" style="color: red;">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
         </div>
 
         <!-- Campo de Contraseña -->
@@ -71,6 +85,11 @@
             id="id_password1"
             required
           />
+          {% if form.password1.errors %}
+            {% for error in form.password1.errors %}
+              <div class="error" style="color: red;">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
         </div>
 
   
@@ -83,6 +102,11 @@
             id="id_password2"
             required
           />
+          {% if form.password2.errors %}
+            {% for error in form.password2.errors %}
+              <div class="error" style="color: red;">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
         </div>
       <div class="input-field-acceptance">
         <label>
