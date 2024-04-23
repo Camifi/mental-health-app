@@ -71,7 +71,6 @@ form.sign-in-form {
   width: 100%;
   background-color: #f8f9ff;
   margin: 10px 0;
-  height: 55px;
   border-radius: 10px;
   display: grid;
   grid-template-columns: 15% 85%;
@@ -79,7 +78,6 @@ form.sign-in-form {
   position: relative;
 }
 .input-field-acceptance{
-  
   padding: 10px 20px 10px 20px
 }
 .input-field i {

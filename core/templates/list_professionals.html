@@ -13,19 +13,20 @@
       <div class="image">
         <img src="{{ professional.profile_image.url }}" alt="Profile Image">
       </div>
-       <div class="name_job">{{ professional.user.full_name }}</div>
+      <div class="name_job">{{ professional.user.full_name }}</div>
           
         <p> {{ professional.specialization  }}</p>
-       
-       <div class="btns">
-         <a href="{% url 'core:professional_detail' slug=professional.slug %}" class="btn">Conocer</a>
-       
+
+        <div class="btns">
+          {% if user.is_completed %}
+            <a href="{% url 'core:professional_detail' slug=professional.slug %}" class="btn">Conocer</a>
+          {% else %}
+            <a href="{% url 'core:chatbot' %}" class="btn">Completa tu perfil para ver</a>
+          {% endif %}
         </div>
-     
-    </div>
+
+      </div>
     {% endfor %}
   </div>
 </div>
-   {% endblock %}
-
-</html>
+{% endblock %}

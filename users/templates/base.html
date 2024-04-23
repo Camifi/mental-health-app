@@ -51,7 +51,11 @@
     <div class="container-scroller">
         {% include "professional/partials/_navbar.html" %}
     <div class="container-fluid page-body-wrapper">
-        {% include "professional/partials/_sidebar.html" %}
+        {% if user.user_type == 'P' %}
+          {% include "patient/partials/_sidebar.html" %}
+        {% else %}
+          {% include "professional/partials/_sidebar.html" %}
+        {% endif %}
 
         {% block content %}{% endblock %}
     </div>

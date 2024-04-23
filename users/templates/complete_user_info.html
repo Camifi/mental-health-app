@@ -9,14 +9,10 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">
-                                {% if is_editing %}
-                                    Editar tu Información Básica
-                                {% else %}
-                                    Completa tu Información Básica
-                                {% endif %}
+                                Información Básica
                             </h4>
                             <p class="card-description">
-                                Por favor, {% if is_editing %}actualiza{% else %}llena{% endif %} los siguientes campos:
+                                Por favor, llena los siguientes campos:
                             </p>
                             <form class="forms-sample" method="post">
                                 {% csrf_token %}
@@ -41,11 +37,7 @@
                                     <input type="date" class="form-control" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.birthday.value }}">
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">
-                                    {% if is_editing %}
-                                        Actualizar
-                                    {% else %}
                                         Guardar
-                                    {% endif %}
                                 </button>
                             </form>
                         </div>
