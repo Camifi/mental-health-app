@@ -57,8 +57,7 @@ class UserCommonInfoForm(forms.ModelForm):
         model = User
         fields = ['gender', 'birthday', 'city']
         widgets = {
-            'birthday': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
-            # Asumiendo que quieres mantener el widget por defecto para 'gender' y 'birthday'
+            'birthday': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
         }
 
 # Formulario para actualizar la información adicional del profesional

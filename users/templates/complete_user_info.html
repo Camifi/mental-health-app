@@ -48,7 +48,7 @@
                             </div>
                                 <div class="form-group">
                                     <label for="{{ form.birthday.id_for_label }}">Fecha de Nacimiento</label>
-                                    <input type="date" class="form-control" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.birthday.value }}">
+                                    {{ form.birthday }}
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">
                                         Guardar
