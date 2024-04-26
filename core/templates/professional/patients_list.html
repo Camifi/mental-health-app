@@ -17,11 +17,45 @@
                 </div>
             </div>
           </div>
+
+          <!-- Tabla de Pacientes Pendientes -->
+        {% if pending_patients %}
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Pacientes Pendientes de Aprobación</h4>
+                    <div class="table-responsive">
+                        <table id="pendingPatientsTable" class="display expandable-table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Nombre Completo</th>
+                                    <th>Motivo de la Consulta</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for connection in pending_patients %}
+                                <tr>
+                                    <td>{{ connection.patient.user.full_name }}</td>
+                                    <td>{{ connection.patient.reason_for_therapy }}</td>
+                                    <td>
+                                        <a href="{% url 'core:accept_connection' connection.id %}" class="btn btn-success btn-sm">Aceptar</a>
+                                        <a href="{% url 'core:reject_connection' connection.id %}" class="btn btn-danger btn-sm">Rechazar</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Pacientes asignados</h4>
-              
                 <div class="table-responsive">
                     <table id="example" class="display expandable-table" style="width:100%">
                         <thead>
@@ -33,12 +67,12 @@
                         </thead>
                         <tbody>
                             {% if patients %}
-                                {% for patient in patients %}
+                                {% for connection in patients %}
                                     <tr>
-                                        <td>{{ patient.user.full_name }}</td>
-                                        <td>{{ patient.reason_for_therapy  }}</td>
+                                        <td>{{ connection.patient.user.full_name }}</td>
+                                        <td>{{ connection.patient.reason_for_therapy }}</td>
                                         <td>
-                                            <a href="{% url 'core:professional_patient_detail' patient.id %}" class="btn btn-primary btn-sm">Ver más</a>
+                                            <a href="{% url 'core:professional_patient_detail' connection.patient.id %}" class="btn btn-primary btn-sm">Ver más</a>
                                         </td>
                                     </tr>
                                 {% endfor %}

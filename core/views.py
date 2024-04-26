@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Message, Patient, Professional, Session, User
+from .models import Message, Patient, Professional, Session, User, PatientProfessionalConnection, ConnectionStatus
 from .helpers import ask_openai, create_patient
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
@@ -79,8 +79,24 @@ def list_professionals(request):
 def professional_detail(request, slug):
     professional = get_object_or_404(Professional, slug=slug)
     user = request.user
-    patient = Patient.objects.get(user=user.id)
-    return render(request, 'professionals_details.html', {'professional': professional, 'patient': patient})
+    patient = get_object_or_404(Patient, user=user)
+
+    # Intentar obtener cualquier conexión actual con cualquier profesional
+    current_connection = PatientProfessionalConnection.objects.filter(patient=patient).first()
+    
+    # Para determinar si se muestra el botón de conectar o el mensaje de conexión activa
+    other_connection = None
+    if current_connection:
+        if current_connection.professional != professional:
+            other_connection = current_connection
+            current_connection = None
+
+    return render(request, 'professionals_details.html', {
+        'professional': professional,
+        'patient': patient,
+        'current_connection': current_connection,
+        'other_connection': other_connection
+    })
 
 @login_required
 def clear_chat(request, user_id):
@@ -156,14 +172,23 @@ def list_patients(request):
         return HttpResponseForbidden("No autorizado")
     if not request.user.is_completed:
         return redirect('complete_professional_profile')
+
     try:
         professional = Professional.objects.get(user=request.user)
-        patients = professional.patients.all()
+        # Recuperar las conexiones aceptadas relacionadas con el profesional
+        accepted_connections = PatientProfessionalConnection.objects.filter(professional=professional, status=ConnectionStatus.ACCEPTED)
+
+        # Recuperar las conexiones pendientes relacionadas con el profesional
+        pending_connections = PatientProfessionalConnection.objects.filter(professional=professional, status=ConnectionStatus.PENDING)
     except Professional.DoesNotExist:
         # Manejo del caso en que el usuario no tenga un perfil de profesional asociado
-        patients = []
-    
-    return render(request, 'professional/patients_list.html', {'patients': patients})
+        accepted_connections = []
+        pending_connections = []
+
+    return render(request, 'professional/patients_list.html', {
+        'patients': accepted_connections,  # Enviar conexiones aceptadas
+        'pending_patients': pending_connections  # Enviar conexiones pendientes
+    })
 
 
 @login_required
@@ -172,7 +197,9 @@ def show_patient(request, id):
         return HttpResponseForbidden("No autorizado")
 
     professional = get_object_or_404(Professional, user=request.user)
-    patient = get_object_or_404(Patient, id=id, professional=professional)
+    # Primero obtener la conexión
+    connection = get_object_or_404(PatientProfessionalConnection, patient__id=id, professional=professional, status=ConnectionStatus.ACCEPTED)
+    patient = connection.patient  # Aquí accedes al paciente a través de la conexión
     sessions = Session.objects.filter(patient=patient, professional=professional)
 
     if request.method == 'POST':
@@ -180,7 +207,7 @@ def show_patient(request, id):
         if form.is_valid():
             new_session = form.save(commit=False)
             new_session.professional = professional
-            new_session.patient = patient  # Asegurar que el paciente se establece
+            new_session.patient = patient
             new_session.save()
             return redirect('show_patient', id=id)
     else:
@@ -192,22 +219,28 @@ def show_patient(request, id):
     else:
         prompt = get_session_recommendation(patient, sessions)
 
-    recommendation = ask_openai([], prompt)
+    recommendation = ask_openai([], prompt)  # Asegúrate de que esta función y su implementación son correctas
 
     return render(request, 'professional/patient_detail.html', {
         'patient': patient,
         'sessions': sessions,
-        'form': form,  # Asegúrate de pasar el formulario al template
+        'form': form,
         'recommendation': recommendation
     })
+
+
+
 #sesiones
 @login_required
 def create_session(request, patient_id):
     professional = Professional.objects.get(user=request.user)
-    patient = get_object_or_404(Patient, id=patient_id)  # Asegúrate de que el paciente existe
+    
+    # Asegurarse de que existe una conexión aceptada entre el paciente y el profesional
+    patient = get_object_or_404(Patient, id=patient_id)
+    connection = get_object_or_404(PatientProfessionalConnection, patient=patient, professional=professional, status=ConnectionStatus.ACCEPTED)
 
     if request.method == 'POST':
-        form = SessionForm(request.POST, professional=professional)
+        form = SessionForm(request.POST)
         if form.is_valid():
             session = form.save(commit=False)
             session.professional = professional
@@ -216,20 +249,19 @@ def create_session(request, patient_id):
             messages.success(request, 'La sesión ha sido creada exitosamente.')
             return redirect('core:professional_patient_detail', id=patient_id)
     else:
-        form = SessionForm(professional=professional)
+        form = SessionForm()
 
-    context = {
+    return render(request, 'professional/session_form.html', {
         'form': form,
-        'patient_id': patient_id,  # Asegúrate de pasar esto
-        'session': None
-    }
-    return render(request, 'professional/session_form.html', context)
+        'patient_id': patient_id,
+    })
 
 @login_required
 def edit_session(request, pk):
     session = get_object_or_404(Session, pk=pk)
+    connection = get_object_or_404(PatientProfessionalConnection, patient=session.patient, professional__user=request.user, status=ConnectionStatus.ACCEPTED)
 
-    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL or session.patient.professional.user != request.user:
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")
 
     if request.method == 'POST':
@@ -241,71 +273,78 @@ def edit_session(request, pk):
     else:
         form = SessionForm(instance=session)
 
-    context = {
+    return render(request, 'professional/session_form.html', {
         'form': form,
-        'patient_id': session.patient.id,  # Asegúrate de pasar esto
+        'patient_id': session.patient.id,
         'session': session
-    }
-    return render(request, 'professional/session_form.html', context)
-
+    })
 
 @login_required
 def delete_session(request, pk):
+    session = get_object_or_404(Session, pk=pk)
+    connection = get_object_or_404(PatientProfessionalConnection, patient=session.patient, professional__user=request.user, status=ConnectionStatus.ACCEPTED)
+
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")
-    session = get_object_or_404(Session, pk=pk)
-    # Asegurar que el paciente asociado a la sesión esté bajo el cuidado del profesional actual
-    if session.patient.professional.user != request.user:
-        return redirect('core:session_list')  # O puedes mostrar un mensaje de error
     
     if request.method == 'POST':
         session.delete()
         return redirect('core:professional_patient_detail', id=session.patient.id)
-    return render(request, 'professional/session_confirm_delete.html', {'session': session})
 
+    return render(request, 'professional/session_confirm_delete.html', {
+        'session': session
+    })
 
 
 @login_required
-
 def connectProfessional(request, professional_id):
     if request.user.user_type != User.UserTypeChoices.PATIENT:
         return HttpResponseForbidden("No autorizado")
-    user = request.user
-    
-    # Intenta recuperar el perfil de Patient asociado al usuario
-    try:
-        patient = Patient.objects.get(user=user)
-    except Patient.DoesNotExist:
-        # Si el usuario no tiene un perfil de Patient, redirige a la página anterior
+    patient = get_object_or_404(Patient, user=request.user)
+
+    # Verifica que no exista una conexión pendiente o aceptada
+    if hasattr(patient, 'connection') and patient.connection.status in ['pending', 'accepted']:
+        messages.error(request, 'Ya tienes una conexión en proceso o aceptada.')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-    # Verifica si el Patient ya tiene un Professional asignado
-    if patient.professional is not None:
-        # Si ya tiene un Professional asignado, redirige a la página anterior
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-    
-
-    # Verifica que el Professional con el ID proporcionado exista
     professional = get_object_or_404(Professional, pk=professional_id)
+    connection = PatientProfessionalConnection(patient=patient, professional=professional)
+    connection.save()
 
-    # Asigna el Professional al Patient y guarda el cambio
-    patient.professional = professional
-    patient.save()
-
-    messages.success(request, 'Conexión con el profesional realizada con éxito.')
+    messages.success(request, 'Solicitud de conexión enviada.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
 def disconnectProfessional(request):
     user = request.user
-    patient = Patient.objects.get(user=user.id)
-    patient.professional = None
-    patient.save()
+    try:
+        patient = Patient.objects.get(user=user)
+        connection = PatientProfessionalConnection.objects.get(patient=patient)
+    except (Patient.DoesNotExist, PatientProfessionalConnection.DoesNotExist):
+        messages.error(request, 'No se encontró la conexión o el perfil del paciente.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Procede a eliminar la conexión
+    connection.delete()
 
     messages.success(request, 'Desconexión del profesional realizada con éxito.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
+@login_required
+def acceptConnection(request, connection_id):
+    connection = get_object_or_404(PatientProfessionalConnection, pk=connection_id, professional__user=request.user)
+    connection.status = 'accepted'
+    connection.save()
+    messages.success(request, 'Conexión aceptada.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def rejectConnection(request, connection_id):
+    connection = get_object_or_404(PatientProfessionalConnection, pk=connection_id, professional__user=request.user)
+    connection.delete()
+    messages.success(request, 'Conexión rechazada.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
 def session_list(request):
@@ -315,44 +354,46 @@ def session_list(request):
     if not request.user.is_completed:
         return redirect('complete_professional_profile')
 
-    professional = Professional.objects.get(user=request.user)
-    queryset = Session.objects.filter(professional=professional)
+    try:
+        professional = Professional.objects.get(user=request.user)
+        # Obtiene solo conexiones aceptadas para filtrar pacientes y sesiones
+        connections = PatientProfessionalConnection.objects.filter(professional=professional, status=ConnectionStatus.ACCEPTED)
+        patients = [connection.patient for connection in connections]
+        queryset = Session.objects.filter(professional=professional, patient__in=patients).select_related('patient')
 
-    # Filtros
-@login_required
-def session_list(request):
-    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
-        return HttpResponseForbidden("No autorizado")
-    professional = request.user.professional_profile
-    queryset = Session.objects.filter(professional=professional).select_related('patient')
+        # Filtros adicionales para la búsqueda
+        patient_id = request.GET.get('patient')
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
 
-    # Filtros
-    patient_id = request.GET.get('patient')
-    date_from = request.GET.get('date_from')
-    date_to = request.GET.get('date_to')
+        if patient_id:
+            queryset = queryset.filter(patient__id=patient_id)
+        if date_from:
+            queryset = queryset.filter(session_date__gte=date_from)
+        if date_to:
+            queryset = queryset.filter(session_date__lte=date_to)
 
-    if patient_id:
-        queryset = queryset.filter(patient__id=patient_id)
-    if date_from:
-        queryset = queryset.filter(session_date__gte=date_from)
-    if date_to:
-        queryset = queryset.filter(session_date__lte=date_to)
+    except Professional.DoesNotExist:
+        # En caso de que no se encuentre el profesional, devolver listas vacías para mantener la integridad de la interfaz de usuario
+        queryset = []
+        patients = []
 
     return render(request, 'professional/session_list.html', {
         'sessions': queryset,
-        'patients': professional.patients.all(),  # Suponiendo que la relación es patients en Professional
+        'patients': patients  # Lista de pacientes conectados para mostrar en el filtro o en otra parte de la UI
     })
-
 
 @login_required
 def generate_report(request, id):
     professional = get_object_or_404(Professional, user=request.user)
-    patient = get_object_or_404(Patient, id=id, professional=professional)
+    
+    # Verificar la conexión aceptada antes de generar el reporte
+    connection = get_object_or_404(PatientProfessionalConnection, patient__id=id, professional=professional, status=ConnectionStatus.ACCEPTED)
+    patient = connection.patient
     sessions = Session.objects.filter(patient=patient, professional=professional)
 
+    # Suponiendo que get_session_csv_report y ask_openai están correctamente definidos
     prompt = get_session_csv_report(patient, sessions)
-
-    # Obtener la respuesta de GPT
     report_text = ask_openai([], prompt)
 
     # Crear un archivo CSV en memoria
@@ -366,6 +407,6 @@ def generate_report(request, id):
 
     # Configurar la respuesta HTTP con el contenido del archivo CSV en memoria
     response = HttpResponse(report_csv.getvalue(), content_type='text/csv')
-    response['Content-Disposition'] = f"attachment; filename=\"reporte-{patient.user.username}.csv\""
+    response['Content-Disposition'] = f'attachment; filename="reporte-{patient.user.username}.csv"'
 
     return response
