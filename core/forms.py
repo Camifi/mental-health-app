@@ -4,9 +4,9 @@ from .models import Patient, Session
 class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
-        fields = ['session_date', 'objectives', 'difficulties']  # Se eliminó 'patient' de aquí
+        fields = ['session_date', 'objectives', 'difficulties']
         widgets = {
-            'session_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'session_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
             'objectives': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
             'difficulties': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
         }
