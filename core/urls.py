@@ -20,6 +20,8 @@ urlpatterns = [
     path('professional/patients/', views.list_patients, name='professional_patients'),
     path('professional/patients/<int:id>/', views.show_patient, name='professional_patient_detail'),
     path('professional/patients/<int:id>/report/', views.generate_report, name="patient_report"),
+    path('professional/connection/accept/<int:connection_id>/', views.acceptConnection, name='accept_connection'),
+    path('professional/connection/reject/<int:connection_id>/', views.rejectConnection, name='reject_connection'),
 
     path('sessions/', views.session_list, name='session_list'),
     path('sessions/create/<int:patient_id>/', views.create_session, name='create_session'),

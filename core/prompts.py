@@ -34,6 +34,8 @@ CREATE_A_JSON_PATIENT_PROMPT = (
         "\"preferencia_terapeuta\": \"*respuesta a la preferencia de género del terapeuta, 'F' si femenino, 'M' si masculino, "
          "o 'N' si no tiene preferencia \""
         "}. \n\n"
+        "Recuerda que debes redactar mejor la respuesta del paciente, los pacientes pueden dar respuestas vagas, incompletas, con mala "
+        "ortografía, etc. Tu tarea es optimizar el input del paciente de manera que sea más util para los profesionales de la plataforma."
 )
 
 SUGGEST_A_PROFESSIONAL_PROMPT = (

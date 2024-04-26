@@ -62,7 +62,6 @@ class Professional(models.Model):
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile')
-    professional = models.ForeignKey(Professional, on_delete=models.CASCADE, related_name='patients', null=True, blank=True)
     primary_care_physician = models.CharField(_("Médico de Cabecera"), max_length=255, blank=True, null=True)
     previous_therapy_experience = models.TextField(_("Realizo terapia anteriormente"), blank=True, null=True)
     reason_for_therapy = models.TextField(_("Motivo de la consulta"))
@@ -84,6 +83,25 @@ class Patient(models.Model):
         # Asegúrate de que 'full_name' es el campo correcto en tu modelo de User.
         # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
         return self.user.full_name
+
+
+class ConnectionStatus(models.TextChoices):
+    PENDING = 'pending', 'Pendiente'
+    ACCEPTED = 'accepted', 'Aceptado'
+
+
+class PatientProfessionalConnection(models.Model):
+    patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name='connection')
+    professional = models.ForeignKey(Professional, on_delete=models.CASCADE, related_name='connections')
+    status = models.CharField(
+        max_length=20,
+        choices=ConnectionStatus.choices,
+        default=ConnectionStatus.PENDING
+    )
+
+    def __str__(self):
+        return f"{self.patient.user.full_name} - {self.professional.user.full_name} - {self.status}"
+
 
 class Session(models.Model):
     professional = models.ForeignKey(Professional, on_delete=models.CASCADE, related_name='sessions')
