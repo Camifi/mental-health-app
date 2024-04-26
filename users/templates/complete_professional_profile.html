@@ -2,27 +2,57 @@
 {% load static %}
 
 {% block content %}
-<div class="col-md-6 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Configura Tu Perfil Profesional</h4>
-            <p class="card-description">
-                Proporciona detalles para que los pacientes te conozcan mejor y puedan elegirte con confianza
-            </p>
-            <p>
-                La información detallada permite a los pacientes encontrar el especialista adecuado y asegura la mejor correspondencia
-            </p>
-            <form method="post" enctype="multipart/form-data" class="forms-sample">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <div class="form-group row">
-                    <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary mr-2">Guardar</button>
-                       
+<div class="main-panel">        
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Configura Tu Perfil Profesional</h4>
+                        {% if request.resolver_match.view_name == "complete_professional_profile" %}
+                        {% if messages %}
+                        <div class="alert-container">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                     
+                        <form method="post" enctype="multipart/form-data" class="form-sample">
+                            {% csrf_token %}
+                            <p class="card-description">
+                                Proporciona detalles para que los pacientes te conozcan mejor y puedan elegirte con confianza.
+                            </p>
+                            <div class="row">
+                                <!-- Campos del formulario -->
+                                {% for field in form %}
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">{{ field.label }}</label>
+                                        <div class="col-sm-9">
+                                            {{ field }}
+                                            {% if field.help_text %}
+                                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                                </div><div class="row">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <button type="submit" class="btn btn-primary mr-2">Guardar</button>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

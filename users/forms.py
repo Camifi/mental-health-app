@@ -77,5 +77,14 @@ class ProfessionalAdditionalInfoForm(forms.ModelForm):
             'profile_image',
         ]
         widgets = {
-            'biography': forms.Textarea(attrs={'rows': 4, 'cols': 40}),  # Usa Textarea para la biografía
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'certifications_or_courses': forms.Textarea(attrs={'class': 'form-control'}),
+            'therapeutic_approaches': forms.Textarea(attrs={'class': 'form-control'}),
+            'session_modalities': forms.Select(attrs={'class': 'form-control'}),
+            'availability': forms.CheckboxSelectMultiple(),
+            'demographic_groups_served': forms.CheckboxSelectMultiple(),
+            'city_served': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'specialization': forms.TextInput(attrs={'class': 'form-control'}),
+            'biography': forms.Textarea(attrs={'class': 'form-control red-background', 'rows': 4}),
+            'profile_image': forms.FileInput(attrs={'class': 'form-control'}),
         }

@@ -11,6 +11,7 @@ from users.models import Post, User
 from users.forms import CustomUserCreationForm
 from django.contrib import messages
 from .forms import CustomUserCreationForm, ProfessionalAdditionalInfoForm, UserCommonInfoForm
+from django.http import HttpResponseForbidden
 
 def signout(request):
     logout(request)
@@ -116,6 +117,8 @@ def complete_user_common_info(request):
 
 @login_required(login_url="signin")
 def complete_professional_profile(request):
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     # Obtenemos el perfil del profesional, creándolo si no existe
     profile, created = Professional.objects.get_or_create(user=request.user)
 
@@ -126,8 +129,11 @@ def complete_professional_profile(request):
             form.save()
             request.user.is_completed = True  # Asumiendo que hay un campo `is_completed`
             request.user.save()
-            # Redirigir a la página de bienvenida específica para profesionales tras guardar
-            return redirect('core:professional_home')  # Asegúrate de que el nombre 'profesional-welcome' corresponda a tu URL configurada
+            messages.success(request, 'Perfil actualizado exitosamente.')  # Mensaje de éxito
+            return redirect('complete_professional_profile')  # Asegúrate de usar el nombre correcto de la URL
+        else:
+            # Agrega un mensaje de error si el formulario no es válido
+            messages.error(request, 'Error al actualizar el perfil. Por favor, revise los datos ingresados.')
     else:
         form = ProfessionalAdditionalInfoForm(instance=profile)
 

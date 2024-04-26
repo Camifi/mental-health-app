@@ -1,50 +1,56 @@
 {% extends "professional/base.html" %} 
 {% load static %} 
 {% block content %}
-<div class="chat-container">
-  <div class="card flex-grow-1">
-    <div class="chatbot-header">
-      <b>Bienvenid@ {{ user.username }}</b>
-    
-      <a href="{% url 'core:clear_chat' user_id=user.id %}" id="clear-messages" class="icon-clear-chat">
-<i class="fa-regular fa-trash-can"></i>
-</a>
-    </div>
-    <div class="card-body messages-box">
-      <ul
-        class="list-unstyled messages-list"
-        style="height: 60vh; overflow-y: auto"
-      >
-       {% for message in chats %}
-    <li class="{{ message.is_from_user|yesno:'sent-message,received-message' }}">
-      <div class="message-text">
-        <div class="message-sender">
-          {% if message.is_from_user %}
-            
-          {% else %}
-            <img src="{% static 'images/g616.svg' %}" class="bot-icon" alt="AI Chatbot" />
-          {% endif %}
+<div class="main-panel">
+  <div class="content-wrapper-bot">
+  
+      <!-- Contenedor del texto adicional -->
+      <div class="additional-text">
+        <h3 class="font-weight-bold">
+          ¿Qué hace el chatbot por ti?
+        </h3>
+        <h6 class="font-weight-normal mb-0">Explora nuestro asistente virtual diseñado para psicólogos. Realiza preguntas
+          específicas del campo y recibe respuestas informadas y precisas al instante
+        </h6>
+      </div>
+    <div class="chat-container">
+      <div class="card flex-grow-1">
+        <div class="chatbot-header">
+          <b>Bienvenid@, {{ user.username }}</b>
+          <a href="{% url 'core:clear_chat' user_id=user.id %}" id="clear-messages" class="icon-clear-chat">
+            <i class="fa-regular fa-trash-can"></i>
+          </a>
         </div>
-        <div class="message-content">{{ message.content }}</div>
+        <div class="card-body messages-box">
+          <ul class="list-unstyled messages-list">
+            {% for message in chats %}
+            <li class="{{ message.is_from_user|yesno:'sent-message,received-message' }}">
+              <div class="message-text">
+                <div class="message-sender">
+                  {% if message.is_from_user %}
+                  {% else %}
+                    <img src="{% static 'images/g616.svg' %}" class="bot-icon" alt="AI Chatbot" />
+                  {% endif %}
+                </div>
+                <div class="message-content">{{ message.content }}</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
-    </li>
-    {% endfor %}
-      </ul>
+      <form class="message-form">
+        {% csrf_token %}
+        <div class="input-group">
+          <input type="text" class="form-control message-input" placeholder="Escribe tu mensaje..." />
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-primary btn-send">Enviar</button>
+          </div>
+        </div>
+      </form>
     </div>
+  
   </div>
-  <form class="message-form">
-    {% csrf_token %}
-    <div class="input-group">
-      <input
-        type="text"
-        class="form-control message-input"
-        placeholder="Escribe tu mensaje..."
-      />
-      <div class="input-group-append">
-        <button type="submit" class="btn btn-primary btn-send">Enviar</button>
-      </div>
-    </div>
-  </form>
 </div>
 
 <script>
@@ -83,7 +89,7 @@
     .then((data) => {
        removeTypingIndicator(); // Remueve el efecto de "typing" ANTES de mostrar la respuesta del bot
       addMessageToList(data.response, false); // Añade la respuesta del bot
-      scrollToBottom(); // Asegura que el scroll baje al último mensaje
+      setTimeout(scrollToBottom, 100); // 
     });
   });
 
@@ -132,8 +138,9 @@ function addTypingIndicator() {
   }
 
   function scrollToBottom() {
-    messagesList.scrollTop = messagesList.scrollHeight;
-  }
+    var messagesBox = document.querySelector(".messages-box");
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+}
 
   clearMessagesButton.addEventListener("click", () => {
     messagesList.innerHTML = ""; // Limpia la lista de mensajes.

@@ -78,7 +78,8 @@ border-radius: 10px 10px 0px 0px;
   
   }
   .messages-box {
-    background: #fff;
+  background: #fff;
+  max-height: 300px;
   overflow: hidden;
   box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
               0 32px 64px -48px rgba(0,0,0,0.5);
@@ -128,7 +129,7 @@ border-radius: 10px 10px 0px 0px;
 
   .chat-container {
     height: 100px;
-    width: 80%;
+   
     margin: 20px 100px 0px 100px;
     flex-direction: column;
   }
@@ -168,4 +169,34 @@ border-radius: 10px 10px 0px 0px;
   display: inline-block; /* Hace que el fondo solo rodee el texto */
   max-width: 80%; /* Máximo ancho del mensaje */
   align-self: flex-start; /* Alinea a la izquierda */
+}
+.content-wrapper-bot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Ajusta según necesites */
+  padding: 10px;
+}
+
+.chat-container {
+  flex: 1;
+  margin-right: 20px; /* Espacio entre las columnas */
+}
+
+.additional-text {
+  flex: 0 1 400px; /* Ocupa hasta 300px de ancho */
+  padding: 20px;
+  
+  border-radius: 10px;
+  background-color: #fff;
+}
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .chat-container,
+  .additional-text {
+    width: 100%; /* Ocupa el ancho completo en dispositivos más pequeños */
+    margin-bottom: 20px; /* Asegura espacio entre los elementos */
+  }
 }

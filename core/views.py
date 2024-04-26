@@ -98,15 +98,26 @@ def professional_detail(request, slug):
         'other_connection': other_connection
     })
 
+@login_required
 def clear_chat(request, user_id):
+    # Asegurarse de que el usuario que hace la petición es el que corresponde al user_id o es un admin
+    if request.user.id != int(user_id) and not request.user.is_superuser:
+        return redirect('home')  # O alguna página de error adecuada
+
     # Obtener todos los mensajes del usuario especificado
     messages_to_delete = Message.objects.filter(user_id=user_id)
     
     # Eliminar los mensajes
     messages_to_delete.delete()
+
+    # Redirigir a la vista correspondiente según el tipo de usuario
+    if request.user.user_type == User.UserTypeChoices.PATIENT:
+        return redirect('core:chatbot')
+    elif request.user.user_type == User.UserTypeChoices.PROFESSIONAL:
+        return redirect('core:chatbot-professional')
     
-    # Redirigir a otra vista
-    return redirect('core:chatbot')
+    # Si no se reconoce el tipo de usuario, redirige a una página de inicio o error
+    return redirect('home')
 
 # myTODO: vista chatbot profesional 
 def chatbot_profesional(request):

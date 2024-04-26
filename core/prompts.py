@@ -11,7 +11,7 @@ FILL_THE_PATIENT_DATA_PROMPT = (
         "\"Espera a que el usuario responda cada pregunta, verifica que es una respuesta válida para la pregunta en cuestión, y mejorala en caso de que no escriba bien\n\n"
         "\"Si el usuario dio una respuesta inválida vuelve a preguntar.Una vez que responda de manera válida continua con la "
         "siguiente pregunta en otro mensaje\n\n"
-        "\"Repite el procedimiento con cada pregunta.Esta son las preguntas:\n\n"
+        "\"Repite el procedimiento con cada pregunta y no te saltes ninguna.Esta son las preguntas:\n\n"
         "1. ¿Recibió terapia anteriormente en psicología o psiquiatría?\n"
         "- En caso de que diga 'Sí', la siguiente pregunta es: ¿Podrías comentarnos el nombre de tu médico de cabecera?\n\n"
         "2. Motivo de la consulta.\n\n"
