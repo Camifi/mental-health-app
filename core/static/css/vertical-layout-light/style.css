@@ -11538,6 +11538,7 @@ fieldset:disabled .wizard > .actions a,
 .btn-primary,
 .wizard > .actions a {
   color: #fff;
+  margin-top:10px;
   background-color: #717BBC;
   border-color: #717BBC;
 }

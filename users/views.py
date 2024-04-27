@@ -10,7 +10,7 @@ from core.models import Patient, Professional
 from users.models import Post, User
 from users.forms import CustomUserCreationForm
 from django.contrib import messages
-from .forms import CustomUserCreationForm, ProfessionalAdditionalInfoForm, UserCommonInfoForm
+from .forms import CustomUserCreationForm, ProfessionalAdditionalInfoForm, UserCommonInfoForm, PatientProfileForm
 from django.http import HttpResponseForbidden
 
 def signout(request):
@@ -111,7 +111,15 @@ def complete_user_common_info(request):
     else:
         form = UserCommonInfoForm(instance=request.user)
 
-    context = { 'form': form }
+    if request.user.user_type == "PR":  # Asume que "PR" indica un usuario profesional
+        base_template = 'professional/base.html'
+    else:
+        base_template = 'patient/base.html'
+
+    context = {
+        'form': form,
+        'base_template': base_template  # Pasar el nombre del template base al contexto
+    }
     return render(request, 'complete_user_info.html', context)
 
 
@@ -184,3 +192,22 @@ def blog_detail(request, pk):
         'post': post
     }
     return render(request, 'blog_detail.html', context)
+
+
+def edit_patient_profile(request):
+    # Asume que el usuario ha iniciado sesión
+    user = request.user
+    if not user.is_completed:
+        # Si el perfil no está completo, podrías redirigir o mostrar un mensaje
+        return redirect('core:chatbot')  # Redirecciona a la página para completar el perfil
+
+    patient = user.patient_profile
+    if request.method == 'POST':
+        form = PatientProfileForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('patient_profile')  # Redirige a la vista del perfil
+    else:
+        form = PatientProfileForm(instance=patient)
+
+    return render(request, 'patient_profile.html', {'form': form})

@@ -3,7 +3,7 @@
       <li class="nav-item {% if request.resolver_match.url_name == 'patient_home' %}active{% endif %}" >
         <a class="nav-link" href="{% url 'core:patient_home' %}">
           <i class="ti-home menu-icon"></i>
-          <span class="menu-title">Inicio de Pacientes</span>
+          <span class="menu-title">Inicio</span>
         </a>
       </li>
 
@@ -44,7 +44,7 @@
         <div class="collapse" id="charts">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item">
-              <a class="nav-link" href="">Paciente</a>
+              <a class="nav-link" href="{% url 'patient_profile' %}">Paciente</a>
             </li>
           </ul>
         </div>

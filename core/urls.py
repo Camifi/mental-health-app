@@ -12,6 +12,7 @@ urlpatterns = [
     path('professionals/<slug:slug>/', views.professional_detail, name='professional_detail'),
     path('connect/<int:professional_id>/', views.connectProfessional, name='connect_professional'),
     path('disconnect/', views.disconnectProfessional, name='disconnect_professional'),
+    
 
 
     # rutas para professional

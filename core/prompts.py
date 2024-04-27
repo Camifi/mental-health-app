@@ -112,7 +112,7 @@ def get_professional_list_formatted(professional_list):
             Disponibilidad: {availability_str}
             Ciudad donde brinda atención: {professional.city_served}
             Breve biografía: {professional.biography}
-            Enlace: http://127.0.0.1:8000/professionals/{professional.slug}
+            Enlace: http://127.0.0.1:8000/core/professionals/{professional.slug}
             """
         formatted_list.append(professional_str)
     

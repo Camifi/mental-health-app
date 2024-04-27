@@ -410,3 +410,5 @@ def generate_report(request, id):
     response['Content-Disposition'] = f'attachment; filename="reporte-{patient.user.username}.csv"'
 
     return response
+
+

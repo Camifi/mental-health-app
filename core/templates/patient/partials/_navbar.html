@@ -3,10 +3,10 @@
     <div
       class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"
     >
-      <a class="navbar-brand brand-logo mr-5" href=""
+      <a class="navbar-brand brand-logo mr-5" href="{% url 'core:patient_home' %}"
         ><img src="{% static 'images/logo-test.svg' %}" class="mr-2" alt="logo" class="mr-2" alt="logo"
       /></a>
-      <a class="navbar-brand brand-logo-mini" href="index.html"
+      <a class="navbar-brand brand-logo-mini" href="{% url 'core:patient_home' %}"
         ><img src="{% static 'images/logo-test.svg' %}" class="mr-2" alt="logo" class="mr-2" alt="logo"
       /></a>
     </div>
@@ -42,7 +42,7 @@
             </a>
            
         
-            <a class="dropdown-item" href="/logout"">
+            <a class="dropdown-item" href="/logout">
               <i class="ti-power-off text-primary"></i>
               Cerrar sesión
             </a>

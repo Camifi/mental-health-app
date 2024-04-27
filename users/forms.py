@@ -88,3 +88,26 @@ class ProfessionalAdditionalInfoForm(forms.ModelForm):
             'biography': forms.Textarea(attrs={'class': 'form-control red-background', 'rows': 4}),
             'profile_image': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
+class PatientProfileForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = [
+            'primary_care_physician', 
+            'previous_therapy_experience', 
+            'reason_for_therapy', 
+            'therapy_schedule_preference', 
+            'symptoms_description', 
+            'therapy_goals', 
+            'therapist_gender_preference'
+        ]
+        widgets = {
+            'primary_care_physician': forms.TextInput(attrs={'class': 'form-control'}),
+            'previous_therapy_experience': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'reason_for_therapy': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'therapy_schedule_preference': forms.TextInput(attrs={'class': 'form-control'}),
+            'symptoms_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'therapy_goals': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'therapist_gender_preference': forms.Select(attrs={'class': 'form-control'}),
+        }
+

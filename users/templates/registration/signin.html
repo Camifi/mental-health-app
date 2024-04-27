@@ -44,9 +44,7 @@
         <div class="signup-link">
           No tienes una cuenta? <a href="{% url 'signup' %}">Registrarse</a>
            <!-- Enlace para restablecer la contraseña -->
-        <p class="password-reset">
-          ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer contraseña</a>
-        </p>
+      
         {% if messages %}
           <div class="messages">
             {% for message in messages %}

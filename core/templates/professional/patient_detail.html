@@ -19,9 +19,15 @@
                         </tr>
                         <!-- Médico de Cabecera -->
                         <tr>
-                            <th scope="row">Médico de Cabecera</th>
-                            <td>{{ patient.primary_care_physician }}</td>
-                        </tr>
+                          <th scope="row">Médico de Cabecera</th>
+                          <td>
+                              {% if patient.primary_care_physician %}
+                                  {{ patient.primary_care_physician }}
+                              {% else %}
+                                  No asignado
+                              {% endif %}
+                          </td>
+                      </tr>
                         <!-- Experiencia con Terapia Anterior -->
                         <tr>
                             <th scope="row">Experiencia con Terapia Anterior</th>
@@ -108,7 +114,9 @@
                       </thead>
                     </table>
                   </div>
+                  {% if sessions %}
                   <a href="{% url 'core:patient_report' patient.id %}" class="btn btn-primary btn-sm">Descargar reporte</a>
+                  {% endif %}
                 </div>
               </div>
               </div>
