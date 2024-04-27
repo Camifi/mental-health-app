@@ -347,6 +347,13 @@ def rejectConnection(request, connection_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
+def removeConnection(request, patient_id):
+    connection = get_object_or_404(PatientProfessionalConnection, patient=patient_id, professional__user=request.user)
+    connection.delete()
+    messages.success(request, 'Conexión removida.')
+    return redirect('core:professional_patients')
+
+@login_required
 def session_list(request):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")

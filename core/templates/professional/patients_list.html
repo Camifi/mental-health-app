@@ -18,6 +18,14 @@
             </div>
           </div>
 
+        {% if messages %}
+            <div class="messages" id="msg">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
           <!-- Tabla de Pacientes Pendientes -->
         {% if pending_patients %}
         <div class="col-lg-12 grid-margin stretch-card">
