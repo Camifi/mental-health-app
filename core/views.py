@@ -8,8 +8,10 @@ from .prompts import get_initial_prompt, get_patient_completed_prompt, get_sessi
 from django.contrib.auth.decorators import login_required
 from .forms import SessionForm
 from django.contrib import messages
+from django.core.mail import send_mail
 import csv
 import io
+
 
 def chatbot(request):
     if request.user.user_type != User.UserTypeChoices.PATIENT:
@@ -310,6 +312,14 @@ def connectProfessional(request, professional_id):
     professional = get_object_or_404(Professional, pk=professional_id)
     connection = PatientProfessionalConnection(patient=patient, professional=professional)
     connection.save()
+
+    send_mail(
+        'Nueva solicitud de conexión recibida',
+        f"El paciente {request.user.full_name} te ha enviado una nueva solicitud.",
+        'camila7898@hotmail.es',
+        ['camifi1912@gmail.com'], # professional.user.email
+        fail_silently=False,
+    )
 
     messages.success(request, 'Solicitud de conexión enviada.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

@@ -6,6 +6,7 @@
         <a href="{% url 'core:list_professionals' %}" class="back-button">
         <img src="{% static 'images/arrow-left.svg' %}">
     </a>
+    
 
                 <div class="profile-card"> 
                         <div class="profile-pic">
@@ -51,12 +52,12 @@
             {% if not current_connection %}
                 {% if other_connection %}
                     {% if other_connection.status == 'pending' %}
-                        <p>Ya tienes una solicitud pendiente con <a href="{% url 'core:professional_detail' slug=other_connection.professional.slug %}">{{ other_connection.professional.user.full_name }}</a></p>
+                        <p>Ya tienes una solicitud pendiente con <a href="{% url 'core:professional_detail' slug=other_connection.professional.slug %}" class="professional-link">{{ other_connection.professional.user.full_name }}</a></p>
                     {% elif other_connection.status == 'accepted' %}
                         <p>Ya tienes una conexión activa con <a href="{% url 'core:professional_detail' slug=other_connection.professional.slug %}">{{ other_connection.professional.user.full_name }}</a></p>
                     {% endif %}
                 {% else %}
-                    <a href="{% url 'core:connect_professional' professional_id=professional.id %}">
+                    <a href="{% url 'core:connect_professional' professional_id=professional.id %}" class="connect-btn">
                         <i class="fa-solid fa-user-group"></i> Conectar
                     </a>
                 {% endif %}
@@ -87,8 +88,7 @@
 {% endif %}
        </div>
 
-    
-      <!----about section ----->
+
        <div class="about">
            <h1>Acerca de mí</h1>
               <img src="{% static 'images/Group_3.svg' %}" alt="Decorative Circle" class="decorative-circle">

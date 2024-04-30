@@ -4,6 +4,7 @@ from core import views
 from mental_health_app import settings
 
 urlpatterns = [
+
     # rutas para patient
     path('welcome/', views.dashboard_patient, name='patient_home'),
     path('chatbot/',views.chatbot, name='chatbot'),

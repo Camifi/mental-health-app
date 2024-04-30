@@ -100,14 +100,7 @@ def complete_user_common_info(request):
             with transaction.atomic():
                 form.save()
                 messages.success(request, 'Tu información ha sido actualizada exitosamente.')
-
-                # Redirigir según el tipo de usuario
-                if request.user.user_type == "PR":
-                    return redirect('core:professional_home')
-                else:
-                    return redirect('core:patient_home')
-        else:
-            messages.error(request, "Por favor corrige los errores en el formulario.")
+                return redirect('complete_user_common_info')
     else:
         form = UserCommonInfoForm(instance=request.user)
 
@@ -135,10 +128,9 @@ def complete_professional_profile(request):
         form = ProfessionalAdditionalInfoForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            request.user.is_completed = True  # Asumiendo que hay un campo `is_completed`
             request.user.save()
-            messages.success(request, 'Perfil actualizado exitosamente.')  # Mensaje de éxito
-            return redirect('complete_professional_profile')  # Asegúrate de usar el nombre correcto de la URL
+            messages.success(request, 'Perfil actualizado exitosamente.')  
+            return redirect('complete_professional_profile')  
         else:
             # Agrega un mensaje de error si el formulario no es válido
             messages.error(request, 'Error al actualizar el perfil. Por favor, revise los datos ingresados.')
@@ -206,6 +198,7 @@ def edit_patient_profile(request):
         form = PatientProfileForm(request.POST, instance=patient)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Tu información ha sido actualizada exitosamente.')
             return redirect('patient_profile')  # Redirige a la vista del perfil
     else:
         form = PatientProfileForm(instance=patient)

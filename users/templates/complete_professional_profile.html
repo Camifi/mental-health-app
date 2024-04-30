@@ -9,7 +9,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Configura Tu Perfil Profesional</h4>
-                        {% if request.resolver_match.view_name == "complete_professional_profile" %}
                         {% if messages %}
                         <div class="alert-container">
                             {% for message in messages %}
@@ -22,7 +21,7 @@
                             {% endfor %}
                         </div>
                         {% endif %}
-                    {% endif %}
+            
                      
                         <form method="post" enctype="multipart/form-data" class="form-sample">
                             {% csrf_token %}

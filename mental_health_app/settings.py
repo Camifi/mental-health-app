@@ -131,3 +131,26 @@ TINYMCE_DEFAULT_CONFIG = {
 
 LANGUAGE_CODE = 'es'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config["MAIL_HOST"]
+EMAIL_PORT = config["MAIL_PORT"] # Debería ser 587 para TLS y 465 para SSL
+EMAIL_USE_TLS= True
+EMAIL_HOST_USER = config["MAIL_USER"]
+EMAIL_HOST_PASSWORD = config["MAIL_PASSWORD"]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.mail': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}

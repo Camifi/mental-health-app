@@ -12,7 +12,6 @@
                             <p class="card-description">
                                 Por favor, llena los siguientes campos:
                             </p>
-                            {% if request.resolver_match.view_name == "complete_user_common_info" %}
                         {% if messages %}
                         <div class="alert-container">
                             {% for message in messages %}
@@ -25,7 +24,7 @@
                             {% endfor %}
                         </div>
                         {% endif %}
-                    {% endif %}
+                   
                             <form class="forms-sample" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
