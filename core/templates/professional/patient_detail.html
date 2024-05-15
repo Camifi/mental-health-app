@@ -14,10 +14,16 @@
                 <thead>
                     <tbody>
                         <!-- Nombre Completo -->
-                        <tr>
+                        <!-- <tr>
                             <th scope="row">Nombre Completo</th>
                             <td>{{ patient.user.full_name }}</td>
-                        </tr>
+                        </tr> -->
+                        <th scope="row">Código del Paciente</th>
+    <td>{{ patient.get_identifier_code }}</td>
+                        <tr>
+                          <th scope="row">Fecha de nacimiento</th>
+                          <td>{{ patient.user.birthday|date:"d/m/Y"|default:"No especificado" }}</td>
+                      </tr>
                         <!-- Médico de Cabecera -->
                         <tr>
                           <th scope="row">Médico de Cabecera</th>

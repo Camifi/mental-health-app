@@ -120,6 +120,26 @@ def complete_user_common_info(request):
 def complete_professional_profile(request):
     if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
         return HttpResponseForbidden("No autorizado")
+
+    profile, created = Professional.objects.get_or_create(user=request.user)
+    print("Perfil obtenido:", profile, "Creado:", created)  # Debug
+
+    if request.method == 'POST':
+        form = ProfessionalAdditionalInfoForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            request.user.is_completed = True
+            request.user.save()
+            messages.success(request, 'Perfil actualizado exitosamente.')  
+            return redirect('complete_professional_profile')  
+        else:
+            messages.error(request, 'Error al actualizar el perfil. Por favor, revise los datos ingresados.')
+    else:
+        form = ProfessionalAdditionalInfoForm(instance=profile)
+
+    return render(request, 'complete_professional_profile.html', {'form': form})
+    if request.user.user_type != User.UserTypeChoices.PROFESSIONAL:
+        return HttpResponseForbidden("No autorizado")
     # Obtenemos el perfil del profesional, creándolo si no existe
     profile, created = Professional.objects.get_or_create(user=request.user)
 
@@ -129,6 +149,7 @@ def complete_professional_profile(request):
         if form.is_valid():
             form.save()
             request.user.save()
+            request.user.is_completed= True
             messages.success(request, 'Perfil actualizado exitosamente.')  
             return redirect('complete_professional_profile')  
         else:

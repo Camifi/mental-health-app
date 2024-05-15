@@ -83,7 +83,12 @@ class Patient(models.Model):
         # Asegúrate de que 'full_name' es el campo correcto en tu modelo de User.
         # Si usas el modelo User predeterminado de Django, podría ser 'username' o 'first_name'.
         return self.user.full_name
+    def get_identifier_code(self):
+        initials = ''.join([name[0].upper() for name in self.user.full_name.split() if name])
+        return f"{initials}{self.id:02d}"  # Asegura que el ID tenga al menos 4 dígitos, añadiendo ceros si es necesario
 
+    def __str__(self):
+        return self.get_identifier_code() 
 
 class ConnectionStatus(models.TextChoices):
     PENDING = 'pending', 'Pendiente'

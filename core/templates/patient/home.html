@@ -11,11 +11,11 @@
           <div class="col-12 col-xl-8 mb-4 mb-xl-0">
             <h3 class="font-weight-bold">
               {% if user.gender == '2' %}
-                Bienvenida @{{ user.username }}
+                Bienvenida @{{ user.full_name }}
               {% elif user.gender == '1' %}
-                Bienvenido @{{ user.username }}
+                Bienvenido {{ user.full_name }}
               {% else %}
-                Bienvenid@ @{{ user.username }}
+                Bienvenid@ {{ user.full_name }}
               {% endif %}
             </h3>
             <h6 class="font-weight-normal mb-0">Te invitamos a explorar nuestra plataforma donde podrás interactuar con nuestro asistente virtual  y descubrir los mejores profesionales para el cuidado de tu salud.</h6>

@@ -36,15 +36,15 @@
                                     </select>
                                 </div>
                             <div class="form-group">
-                                <label for="{{ form.city.id_for_label }}">Ciudad</label>
-                                <select multiple class="form-control" id="{{ form.city.id_for_label }}" name="{{ form.city.html_name }}">
+                                <label for="{{ form.city.id_for_label }}">Ciudad *</label>
+                                <select multiple class="form-control" id="{{ form.city.id_for_label }}" name="{{ form.city.html_name }} " required>
                                     {% for city in form.city.field.queryset %}
                                     <option value="{{ city.pk }}" {% if city.pk in form.city.value %}selected{% endif %}>{{ city.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                                 <div class="form-group">
-                                    <label for="{{ form.birthday.id_for_label }}">Fecha de Nacimiento</label>
+                                    <label for="{{ form.birthday.id_for_label }}">Fecha de Nacimiento *</label>
                                     {{ form.birthday }}
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">

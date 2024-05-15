@@ -143,12 +143,12 @@
     </div>
     <div class="desc">
         <h3>Logística y Disponibilidad</h3>
-       <p> <strong>Modalidades de atención: </strong>
-            {% for mode in professional.session_modalities.all %}
-                {{ mode.get_name_display }}{% if not forloop.last %}, {% endif %}
-            {% empty %}
+        <p><strong>Modalidades de atención:</strong>
+            {% if professional.session_modalities %}
+                {{ professional.get_session_modalities_display }}
+            {% else %}
                 No especificado
-            {% endfor %}
+            {% endif %}
         </p>
         <p><strong>Ciudades donde atiende: </strong>
             {% for city in professional.city_served.all %}

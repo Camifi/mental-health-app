@@ -11,7 +11,7 @@ FILL_THE_PATIENT_DATA_PROMPT = (
         "\"Espera a que el usuario responda cada pregunta, verifica que es una respuesta válida para la pregunta en cuestión, y mejorala en caso de que no escriba bien\n\n"
         "\"Si el usuario dio una respuesta inválida vuelve a preguntar.Una vez que responda de manera válida continua con la "
         "siguiente pregunta en otro mensaje\n\n"
-        "\"Repite el procedimiento con cada pregunta y no te saltes ninguna.Esta son las preguntas:\n\n"
+        "\"Repite el procedimiento con cada pregunta.Esta son las preguntas:\n\n"
         "1. ¿Recibió terapia anteriormente en psicología o psiquiatría?\n"
         "- En caso de que diga 'Sí', la siguiente pregunta es: ¿Podrías comentarnos el nombre de tu médico de cabecera?\n\n"
         "2. Motivo de la consulta.\n\n"
@@ -143,7 +143,7 @@ def get_session_recommendation(patient, sessions):
     if sessions:
         prompt += (
         "Puedes dar sugerencias en base a la información del paciente y las sesiones ya creadas\n\n"
-        "como puede avanzar en la próxima sesión, que puntos tener en cuenta, y si se da el caso recomendar materiales que puedan servirle al paciente como pdf, videos etc\n\n"
+        "como puede avanzar en la próxima sesión, que puntos tener en cuenta, y solo si se da el caso , es decir, si el profesional menciona que ya iniciaron algún tipo de tarea puedes recomendar al profesional materiales que puedan servirle al paciente como pdf, videos etc\n\n"
         "Recuerda no dar diagnosticos ya que tu rol aquí es nada más orientar.  La recomendación debe ser máximo de 350 caracteres"
 
     )
@@ -168,6 +168,7 @@ def get_session_custom_request(patient, sessions, custom_prompt):
         "Tu tarea es responder LA CONSULTA DEL PROFESIONAL según tu conocimiento, la información del paciente y su historial de sesiones."
         "No debes realizar diagnósticos, pero sí puedes recomendar enfoques terapéuticos y actividades según la información del paciente y las sesiones previas, "
         "recursos como PDFs, vídeos y libros. PERO PRINCIPALMENTE RESPONDER LA CONSULTA DEL PROFESIONAL de la manera más corta y concisa posible, sin dejar de ser amable."
+        "En caso de que el profesional escriba cualquier cosa responde que estás preparado para responder consultas sobre su paciente y que repita la pregunta."
         f"\n\nInformación del paciente {patient.user.full_name}:\n"
         f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
         f"- Descripción de síntomas: {patient.symptoms_description}\n"
@@ -196,7 +197,7 @@ def get_session_csv_report(patient, sessions):
         "Eres un asistente virtual que apoya a psicólogos en la preparación de sus sesiones. "
         "Tu tarea es generar un CSV a partir de las sesiones de este paciente. Genera un reporte inteligente de cada sesión, estandarizando el lenguaje "
         "de las sesiones, redactando y resumiendo bien en caso la sesión sea muy larga, ordenando por fechas, generando una columna extra "
-        "llamada 'etiqueta' donde vas a generar etiquetas relacionadas a la sesión. Ejemplo: cigarrillo, adicción, bullying, insomnio.\n\n"
+        "llamada 'temas a tratar' donde vas a generar etiquetas relacionadas a la sesión. Ejemplo: cigarrillo, adicción, bullying, insomnio.\n\n"
         f"Información del paciente {patient.user.full_name}:\n"
         f"- Motivo de la consulta: {patient.reason_for_therapy}\n"
         f"- Descripción de síntomas: {patient.symptoms_description}\n"
@@ -210,7 +211,8 @@ def get_session_csv_report(patient, sessions):
             if session.difficulties:
                 prompt += f"Dificultades: {session.difficulties}\n"
         prompt += "\n\nLas columnas necesarias en tu CSV son: nombre paciente, fecha de sesión, objetivos alcanzados, dificultades, puntos positivos, puntos negativos, etiquetas.\n"
-        prompt += "\nLos puntos negativos y positivos debes redactarlo tu a base de los objetivos alcanzados y las dificultades, autocompletalos.\n"
+        prompt += "\nLas etiquetas para la columna 'temas a tratar' deben ser generadas basadas en la información de cada sesión y escritas en formato de lista separadas por comas, encerradas en comillas para asegurar que se traten como un único campo.\n"
+        prompt += "\nColoca bien Los puntos negativos y positivos debes redactarlo tu a base de los objetivos alcanzados y las dificultades, autocompletalos.\n"
         prompt += "Genera y responde directamente con el CSV, una fila por sesión, ni un saludo ni nada, SOLO EL CSV\n"
     else:
         prompt += (
